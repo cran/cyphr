@@ -1,6 +1,6 @@
 Package: cyphr
 Title: High Level Encryption Wrappers
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: person("Rich", "FitzJohn", role = c("aut", "cre"),
     email = "rich.fitzjohn@gmail.com")
 Description: Encryption wrappers, using low-level support from
@@ -12,7 +12,7 @@ Description: Encryption wrappers, using low-level support from
     adding encryption to existing analyses.
 License: MIT + file LICENSE
 LazyData: true
-URL: https://github.com/ropensci/cyphr
+URL: https://github.com/ropensci/cyphr, https://docs.ropensci.org/cyphr
 BugReports: https://github.com/ropensci/cyphr/issues
 Imports: getPass, openssl (>= 0.9.9), sodium
 Suggests: knitr, rmarkdown, testthat
@@ -21,8 +21,8 @@ VignetteBuilder: rmarkdown, knitr
 Encoding: UTF-8
 Language: en-GB
 NeedsCompilation: no
-Packaged: 2019-03-22 11:43:45 UTC; rfitzjoh
+Packaged: 2020-01-14 15:11:52 UTC; rich
 Author: Rich FitzJohn [aut, cre]
 Maintainer: Rich FitzJohn <rich.fitzjohn@gmail.com>
 Repository: CRAN
-Date/Publication: 2019-03-23 09:03:48 UTC
+Date/Publication: 2020-01-14 18:10:03 UTC

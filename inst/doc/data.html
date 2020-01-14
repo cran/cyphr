@@ -1,555 +1,736 @@
 <!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="pandoc" />
+<title>Minimal example</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<meta name="author" content="Rich FitzJohn" />
-
-<meta name="date" content="2019-03-22" />
-
-<title>Data Encryption</title>
-
-
-
-<style type="text/css">code{white-space: pre;}</style>
-<style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+};
+</script>
 
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
 </style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
 </script>
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
 }
-#header {
-text-align: center;
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
 }
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
 }
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
+
+h1 {
+   font-size:2.2em;
 }
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
+
+h2 {
+   font-size:1.8em;
 }
-#TOC ul ul {
-margin-left: -2em;
+
+h3 {
+   font-size:1.4em;
 }
-#TOC li {
-line-height: 16px;
+
+h4 {
+   font-size:1.0em;
 }
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
+
+h5 {
+   font-size:0.9em;
 }
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
+
+h6 {
+   font-size:0.8em;
 }
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
 }
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
+
+pre, img {
+  max-width: 100%;
 }
 pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
+  overflow-x: auto;
 }
-pre:not([class]) {
-background-color: #f7f7f7;
+pre code {
+   display: block; padding: 0.5em;
 }
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
 
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
 </style>
+
+
 
 </head>
 
 <body>
-
-
-
-
-<h1 class="title toc-ignore">Data Encryption</h1>
-<h4 class="author"><em>Rich FitzJohn</em></h4>
-<h4 class="date"><em>2019-03-22</em></h4>
-
-
-
 <p><strong>The scenario:</strong></p>
-<p>A group of people are working on a sensitive data set that for practical reasons needs to be stored in a place that we’re not 100% happy with the security (e.g., Dropbox), or we’re concerned that files stored in plain text on users computers (e.g. laptops) may lead to the data being compromised.</p>
-<p>If the data can be stored encrypted but everyone in the group can still read and write the data then we’ve improved the situation somewhat. But organising for everyone to get a copy of the key to decrypt the data files is non-trivial. The workflow described here aims to simplify this procedure using lower-level functions in the <code>cyphr</code> package.</p>
+
+<p>A group of people are working on a sensitive data set that for
+practical reasons needs to be stored in a place that we&#39;re not 100%
+happy with the security (e.g., Dropbox), or we&#39;re concerned that
+files stored in plain text on users computers (e.g. laptops) may
+lead to the data being compromised.</p>
+
+<p>If the data can be stored encrypted but everyone in the group can
+still read and write the data then we&#39;ve improved the situation
+somewhat.  But organising for everyone to get a copy of the key to
+decrypt the data files is non-trivial.  The workflow described here
+aims to simplify this procedure using lower-level functions in the
+<code>cyphr</code> package.</p>
+
 <p>The general procedure is this:</p>
-<ol style="list-style-type: decimal">
-<li><p>A person will set up a set of personal keys and a key for the data. The data key will be encrypted with their personal key so they have access to the data but nobody else does. At this point the data can be encrypted.</p></li>
-<li><p>Additional users set up personal keys and request access to the data. Anyone with access to the data can grant access to anyone else.</p></li>
+
+<ol>
+<li><p>A person will set up a set of personal keys and a key for the
+data.  The data key will be encrypted with their personal key so
+they have access to the data but nobody else does.  At this point
+the data can be encrypted.</p></li>
+<li><p>Additional users set up personal keys and request access to the
+data.  Anyone with access to the data can grant access to anyone
+else.</p></li>
 </ol>
-<p>Before doing any of this, everyone needs to have ssh keys set up. By default the package will use your ssh keys found at “~/.ssh”; see the main package vignette for how to use this.</p>
-<p>For clarity here we will generate two sets of key pairs for two actors Alice and Bob:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">path_key_alice &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">ssh_keygen</span>(<span class="dt">password =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb1-2" title="2">path_key_bob &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">ssh_keygen</span>(<span class="dt">password =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<p>These would ordinarily be on different machines (nobody has access to anyone else’s private key) and they would be password protected. In the function calls below, all the <code>path_user</code> arguments would be omitted.</p>
-<p>We’ll store data in the directory <code>data</code>; at present there is nothing there (this is in a temporary directory for compliance with CRAN policies but would ordinarily be somewhere persistent and under version control ideally).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">data_dir &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">tempdir</span>(), <span class="st">&quot;data&quot;</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw">dir.create</span>(data_dir)</a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="kw">dir</span>(data_dir)</a></code></pre></div>
-<pre><code>## character(0)</code></pre>
-<p><strong>First</strong>, create a personal set of keys. These will be shared across all projects and stored away from the data. Ideally one would do this with <code>ssh-keygen</code> at the command line, following one of the many guides available. A utility function <code>ssh_keygen</code> (which simply calls <code>ssh-keygen</code> for you) is available in this package though. You will need to generate a key on each computer you want access from. Don’t copy the key around. If you lose your user key you will lose access to the data!</p>
-<p><strong>Second</strong>, create a key for the data and encrypt that key with your personal key. Note that the data key is never stored directly - it is always stored encrypted by a personal key.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_init</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
-<pre><code>## Generating data key</code></pre>
-<pre><code>## Authorising ourselves</code></pre>
-<pre><code>## Adding key bc:8f:63:d7:cb:d5:5f:17:6e:9a:0b:d3:93:ac:3d:1d
-##   user: rfitzjoh
-##   host: dyn3181-4.wlan.ic.ac.uk
-##   date: 2019-03-22 11:43:44</code></pre>
-<pre><code>## Verifying</code></pre>
-<p>The data key is very important. If it is deleted, then the data cannot be decrypted. So do not delete the directory <code>data_dir/.cyphr</code>! Ideally add it to your version control system so that it cannot be lost. Of course, if you’re working in a group, there are multiple copies of the data key (each encrypted with a different person’s personal key) which reduces the chance of total loss.</p>
-<p>This command can be run multiple times safely; if it detects it has been rerun and the data key will not be regenerated.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_init</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
-<pre><code>## Already set up</code></pre>
-<pre><code>## Verifying</code></pre>
-<p><strong>Third</strong>, you can add encrypted data to the directory (or to anywhere really). When run, <code>cyphr::config_data</code> will verify that it can actually decrypt things.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">key &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_key</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
-<p>This object can be used with all the <code>cyphr</code> functions (see the “cyphr” vignette; <code>vignette(&quot;cyphr&quot;)</code>)</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">filename &lt;-<span class="st"> </span><span class="kw">file.path</span>(data_dir, <span class="st">&quot;iris.rds&quot;</span>)</a>
-<a class="sourceLine" id="cb13-2" title="2">cyphr<span class="op">::</span><span class="kw">encrypt</span>(<span class="kw">saveRDS</span>(iris, filename), key)</a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="kw">dir</span>(data_dir)</a></code></pre></div>
-<pre><code>## [1] &quot;iris.rds&quot;</code></pre>
+
+<p>Before doing any of this, everyone needs to have ssh keys set up.
+By default the package will use your ssh keys found at &ldquo;~/.ssh&rdquo;;
+see the main package vignette for how to use this.</p>
+
+<p>For clarity here we will generate two sets of key pairs for two
+actors Alice and Bob:</p>
+
+<pre><code class="r">path_key_alice &lt;- cyphr::ssh_keygen(password = FALSE)
+path_key_bob &lt;- cyphr::ssh_keygen(password = FALSE)
+</code></pre>
+
+<p>These would ordinarily be on different machines (nobody has access
+to anyone else&#39;s private key) and they would be password protected.
+In the function calls below, all the <code>path_user</code> arguments would be
+omitted.</p>
+
+<p>We&#39;ll store data in the directory <code>data</code>; at present there is
+nothing there (this is in a temporary directory for compliance with
+CRAN policies but would ordinarily be somewhere persistent and
+under version control ideally).</p>
+
+<pre><code class="r">data_dir &lt;- file.path(tempdir(), &quot;data&quot;)
+dir.create(data_dir)
+dir(data_dir)
+</code></pre>
+
+<pre><code>## character(0)
+</code></pre>
+
+<p><strong>First</strong>, create a personal set of keys.  These will be shared
+across all projects and stored away from the data.  Ideally one
+would do this with <code>ssh-keygen</code> at the command line, following one
+of the many guides available.  A utility function <code>ssh_keygen</code>
+(which simply calls <code>ssh-keygen</code> for you) is available in this
+package though.  You will need to generate a key on each computer
+you want access from.  Don&#39;t copy the key around.  If you lose your
+user key you will lose access to the data!</p>
+
+<p><strong>Second</strong>, create a key for the data and encrypt that key with
+your personal key.  Note that the data key is never stored directly</p>
+
+<ul>
+<li>it is always stored encrypted by a personal key.</li>
+</ul>
+
+<pre><code class="r">cyphr::data_admin_init(data_dir, path_user = path_key_alice)
+</code></pre>
+
+<pre><code>## Generating data key
+</code></pre>
+
+<pre><code>## Authorising ourselves
+</code></pre>
+
+<pre><code>## Adding key e9:f9:2d:e3:42:cc:9e:01:67:35:d6:b5:ea:0a:38:87
+##   user: rich
+##   host: kea
+##   date: 2020-01-14 15:11:51
+</code></pre>
+
+<pre><code>## Verifying
+</code></pre>
+
+<p>The data key is very important.  If it is deleted, then the data
+cannot be decrypted.  So do not delete the directory
+<code>data_dir/.cyphr</code>!  Ideally add it to your version control
+system so that it cannot be lost.  Of course, if you&#39;re working in
+a group, there are multiple copies of the data key (each encrypted
+with a different person&#39;s personal key) which reduces the chance of
+total loss.</p>
+
+<p>This command can be run multiple times safely; if it detects it has
+been rerun and the data key will not be regenerated.</p>
+
+<pre><code class="r">cyphr::data_admin_init(data_dir, path_user = path_key_alice)
+</code></pre>
+
+<pre><code>## Already set up
+</code></pre>
+
+<pre><code>## Verifying
+</code></pre>
+
+<p><strong>Third</strong>, you can add encrypted data to the directory (or to
+anywhere really).  When run, <code>cyphr::config_data</code> will verify
+that it can actually decrypt things.</p>
+
+<pre><code class="r">key &lt;- cyphr::data_key(data_dir, path_user = path_key_alice)
+</code></pre>
+
+<p>This object can be used with all the <code>cyphr</code> functions (see the
+&ldquo;cyphr&rdquo; vignette; <code>vignette(&quot;cyphr&quot;)</code>)</p>
+
+<pre><code class="r">filename &lt;- file.path(data_dir, &quot;iris.rds&quot;)
+cyphr::encrypt(saveRDS(iris, filename), key)
+dir(data_dir)
+</code></pre>
+
+<pre><code>## [1] &quot;iris.rds&quot;
+</code></pre>
+
 <p>The file is encrypted and so cannot be read with <code>readRDS</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">readRDS</span>(filename)</a></code></pre></div>
-<pre><code>## Error in readRDS(filename): unknown input format</code></pre>
+
+<pre><code class="r">readRDS(filename)
+</code></pre>
+
+<pre><code>## Error in readRDS(filename): unknown input format
+</code></pre>
+
 <p>But we can decrypt and read it:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">head</span>(cyphr<span class="op">::</span><span class="kw">decrypt</span>(<span class="kw">readRDS</span>(filename), key))</a></code></pre></div>
+
+<pre><code class="r">head(cyphr::decrypt(readRDS(filename), key))
+</code></pre>
+
 <pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ## 1          5.1         3.5          1.4         0.2  setosa
 ## 2          4.9         3.0          1.4         0.2  setosa
 ## 3          4.7         3.2          1.3         0.2  setosa
 ## 4          4.6         3.1          1.5         0.2  setosa
 ## 5          5.0         3.6          1.4         0.2  setosa
-## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
-<p><strong>Fourth</strong>, have someone else join in. Recall that to simulate another person here, I’m going to pass an argument <code>path_user = path_key_bob</code> though to the functions. This contains the path to “Bob”’s ssh keypair. If run on an actually different computer this would not be needed; this is just to simulate two users in a single session for this vignette (see minimal example below where this is simulated). Again, typically this user would also not use the <code>cyphr::ssh_keygen</code> function but use the <code>ssh-keygen</code> command from their shell.</p>
-<p>We’re going to assume that the user can read and write to the data. This is the case for my use case where the data are stored on dropbox and will be the case with GitHub based distribution, though there would be a pull request step in here.</p>
-<p>This user cannot read the data, though trying to will print a message explaining how you might request access:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">key_bob &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_key</span>(data_dir, <span class="dt">path_user =</span> path_key_bob)</a></code></pre></div>
+## 6          5.4         3.9          1.7         0.4  setosa
+</code></pre>
+
+<p><strong>Fourth</strong>, have someone else join in.  Recall that to simulate
+another person here, I&#39;m going to pass an argument <code>path_user =
+path_key_bob</code> though to the functions.  This contains the path to
+&ldquo;Bob&rdquo;&#39;s ssh keypair.  If run on an actually different computer this
+would not be needed; this is just to simulate two users in a single
+session for this vignette (see minimal example below where this is
+simulated).  Again, typically this user would also not use the
+<code>cyphr::ssh_keygen</code> function but use the <code>ssh-keygen</code> command from
+their shell.</p>
+
+<p>We&#39;re going to assume that the user can read and write to the data.
+This is the case for my use case where the data are stored on
+dropbox and will be the case with GitHub based distribution, though
+there would be a pull request step in here.</p>
+
+<p>This user cannot read the data, though trying to will print a
+message explaining how you might request access:</p>
+
+<pre><code class="r">key_bob &lt;- cyphr::data_key(data_dir, path_user = path_key_bob)
+</code></pre>
+
 <pre><code>## Error: Key file not found; you may not have access
-## (looked in /var/folders/z7/c2kx_kt96zn2tt_6179bkc4m0000gp/T//Rtmp4OHgUv/data/.cyphr/51413595e153747977ef497bc5fc1504)
+## (looked in /tmp/RtmpO9Sq7V/data/.cyphr/002cd3e70f8fbdeb624156865b12fb4b)
 ## To request access, run:
-##   data_request_access(&quot;/var/folders/z7/c2kx_kt96zn2tt_6179bkc4m0000gp/T//Rtmp4OHgUv/data&quot;)</code></pre>
-<p>But <code>bob</code> is your collaborator and needs access! What they need to do is run:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">cyphr<span class="op">::</span><span class="kw">data_request_access</span>(data_dir, <span class="dt">path_user =</span> path_key_bob)</a></code></pre></div>
-<pre><code>## A request has been added</code></pre>
-<pre><code>## Email someone with access to add you.</code></pre>
-<pre><code>##  hash: 51:41:35:95:e1:53:74:79:77:ef:49:7b:c5:fc:15:04</code></pre>
+##   data_request_access(&quot;/tmp/RtmpO9Sq7V/data&quot;)
+</code></pre>
+
+<p>But <code>bob</code> is your collaborator and needs access!  What they need
+to do is run:</p>
+
+<pre><code class="r">cyphr::data_request_access(data_dir, path_user = path_key_bob)
+</code></pre>
+
+<pre><code>## A request has been added
+</code></pre>
+
+<pre><code>## Email someone with access to add you.
+</code></pre>
+
+<pre><code>##  hash: 00:2c:d3:e7:0f:8f:bd:eb:62:41:56:86:5b:12:fb:4b
+</code></pre>
+
 <p>(again, ordinarily you would not need the <code>bob</code> bit here)</p>
-<p>The user should the send an email to someone with access and quote the hash in the message above.</p>
-<p><strong>Fifth</strong>, back on the first computer we can authorise the second user. First, see who has requested access:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">req &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_admin_list_requests</span>(data_dir)</a>
-<a class="sourceLine" id="cb25-2" title="2">req</a></code></pre></div>
+
+<p>The user should the send an email to someone with access and quote
+the hash in the message above.</p>
+
+<p><strong>Fifth</strong>, back on the first computer we can authorise the second
+user.  First, see who has requested access:</p>
+
+<pre><code class="r">req &lt;- cyphr::data_admin_list_requests(data_dir)
+req
+</code></pre>
+
 <pre><code>## 1 key:
-##   51:41:35:95:e1:53:74:79:77:ef:49:7b:c5:fc:15:04
-##     user: rfitzjoh
-##     host: dyn3181-4.wlan.ic.ac.uk
-##     date: 2019-03-22 11:43:44</code></pre>
-<p>We can see the same hash here as above (<code>51413595e153747977ef497bc5fc1504</code>)</p>
-<p>…and then grant access to them with the <code>cyphr::data_admin_authorise</code> function.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_authorise</span>(data_dir, <span class="dt">yes =</span> <span class="ot">TRUE</span>, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
-<pre><code>## There is 1 request for access</code></pre>
-<pre><code>## Adding key 51:41:35:95:e1:53:74:79:77:ef:49:7b:c5:fc:15:04
-##   user: rfitzjoh
-##   host: dyn3181-4.wlan.ic.ac.uk
-##   date: 2019-03-22 11:43:44</code></pre>
-<pre><code>## Added 1 key</code></pre>
-<p>If you do not specify <code>yes = TRUE</code> will prompt for confirmation at each key added.</p>
+##   00:2c:d3:e7:0f:8f:bd:eb:62:41:56:86:5b:12:fb:4b
+##     user: rich
+##     host: kea
+##     date: 2020-01-14 15:11:51
+</code></pre>
+
+<p>We can see the same hash here as above (<code>002cd3e70f8fbdeb624156865b12fb4b</code>)</p>
+
+<p>&hellip;and then grant access to them with the
+<code>cyphr::data_admin_authorise</code> function.</p>
+
+<pre><code class="r">cyphr::data_admin_authorise(data_dir, yes = TRUE, path_user = path_key_alice)
+</code></pre>
+
+<pre><code>## There is 1 request for access
+</code></pre>
+
+<pre><code>## Adding key 00:2c:d3:e7:0f:8f:bd:eb:62:41:56:86:5b:12:fb:4b
+##   user: rich
+##   host: kea
+##   date: 2020-01-14 15:11:51
+</code></pre>
+
+<pre><code>## Added 1 key
+</code></pre>
+
+<p>If you do not specify <code>yes = TRUE</code> will prompt for confirmation at
+each key added.</p>
+
 <p>This has cleared the request queue:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_list_requests</span>(data_dir)</a></code></pre></div>
-<pre><code>## (empty)</code></pre>
+
+<pre><code class="r">cyphr::data_admin_list_requests(data_dir)
+</code></pre>
+
+<pre><code>## (empty)
+</code></pre>
+
 <p>and added it to our set of keys:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_list_keys</span>(data_dir)</a></code></pre></div>
+
+<pre><code class="r">cyphr::data_admin_list_keys(data_dir)
+</code></pre>
+
 <pre><code>## 2 keys:
-##   51:41:35:95:e1:53:74:79:77:ef:49:7b:c5:fc:15:04
-##     user: rfitzjoh
-##     host: dyn3181-4.wlan.ic.ac.uk
-##     date: 2019-03-22 11:43:44
-##   bc:8f:63:d7:cb:d5:5f:17:6e:9a:0b:d3:93:ac:3d:1d
-##     user: rfitzjoh
-##     host: dyn3181-4.wlan.ic.ac.uk
-##     date: 2019-03-22 11:43:44</code></pre>
-<p><strong>Finally</strong>, as soon as the authorisation has happened, the user can encrypt and decrypt files:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">key_bob &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_key</span>(data_dir, <span class="dt">path_user =</span> path_key_bob)</a>
-<a class="sourceLine" id="cb35-2" title="2"><span class="kw">head</span>(cyphr<span class="op">::</span><span class="kw">decrypt</span>(<span class="kw">readRDS</span>(filename), key_bob))</a></code></pre></div>
+##   00:2c:d3:e7:0f:8f:bd:eb:62:41:56:86:5b:12:fb:4b
+##     user: rich
+##     host: kea
+##     date: 2020-01-14 15:11:51
+##   e9:f9:2d:e3:42:cc:9e:01:67:35:d6:b5:ea:0a:38:87
+##     user: rich
+##     host: kea
+##     date: 2020-01-14 15:11:51
+</code></pre>
+
+<p><strong>Finally</strong>, as soon as the authorisation has happened, the user
+can encrypt and decrypt files:</p>
+
+<pre><code class="r">key_bob &lt;- cyphr::data_key(data_dir, path_user = path_key_bob)
+head(cyphr::decrypt(readRDS(filename), key_bob))
+</code></pre>
+
 <pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ## 1          5.1         3.5          1.4         0.2  setosa
 ## 2          4.9         3.0          1.4         0.2  setosa
 ## 3          4.7         3.2          1.3         0.2  setosa
 ## 4          4.6         3.1          1.5         0.2  setosa
 ## 5          5.0         3.6          1.4         0.2  setosa
-## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
-<div id="minimal-example" class="section level2">
+## 6          5.4         3.9          1.7         0.4  setosa
+</code></pre>
+
 <h2>Minimal example</h2>
+
 <p>As above, but with less discussion:</p>
-<p>Setup, on alice’s computer computer:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_init</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
-<pre><code>## Generating data key</code></pre>
-<pre><code>## Authorising ourselves</code></pre>
-<pre><code>## Adding key bc:8f:63:d7:cb:d5:5f:17:6e:9a:0b:d3:93:ac:3d:1d
-##   user: rfitzjoh
-##   host: dyn3181-4.wlan.ic.ac.uk
-##   date: 2019-03-22 11:43:44</code></pre>
-<pre><code>## Verifying</code></pre>
+
+<p>Setup, on alice&#39;s computer computer:</p>
+
+<pre><code class="r">cyphr::data_admin_init(data_dir, path_user = path_key_alice)
+</code></pre>
+
+<pre><code>## Generating data key
+</code></pre>
+
+<pre><code>## Authorising ourselves
+</code></pre>
+
+<pre><code>## Adding key e9:f9:2d:e3:42:cc:9e:01:67:35:d6:b5:ea:0a:38:87
+##   user: rich
+##   host: kea
+##   date: 2020-01-14 15:11:51
+</code></pre>
+
+<pre><code>## Verifying
+</code></pre>
+
 <p>Get the data key key:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1">key &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_key</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
+
+<pre><code class="r">key &lt;- cyphr::data_key(data_dir, path_user = path_key_alice)
+</code></pre>
+
 <p>Encrypt a file:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1">cyphr<span class="op">::</span><span class="kw">encrypt</span>(<span class="kw">saveRDS</span>(iris, filename), key)</a></code></pre></div>
-<p>Request access, on Bob’s computer computer:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1">hash &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_request_access</span>(data_dir, <span class="dt">path_user =</span> path_key_bob)</a></code></pre></div>
-<pre><code>## A request has been added</code></pre>
-<pre><code>## Email someone with access to add you.</code></pre>
-<pre><code>##  hash: 51:41:35:95:e1:53:74:79:77:ef:49:7b:c5:fc:15:04</code></pre>
+
+<pre><code class="r">cyphr::encrypt(saveRDS(iris, filename), key)
+</code></pre>
+
+<p>Request access, on Bob&#39;s computer computer:</p>
+
+<pre><code class="r">hash &lt;- cyphr::data_request_access(data_dir, path_user = path_key_bob)
+</code></pre>
+
+<pre><code>## A request has been added
+</code></pre>
+
+<pre><code>## Email someone with access to add you.
+</code></pre>
+
+<pre><code>##  hash: 00:2c:d3:e7:0f:8f:bd:eb:62:41:56:86:5b:12:fb:4b
+</code></pre>
+
 <p>Alice authorises this request::</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_authorise</span>(data_dir, <span class="dt">yes =</span> <span class="ot">TRUE</span>, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
-<pre><code>## There is 1 request for access</code></pre>
-<pre><code>## Adding key 51:41:35:95:e1:53:74:79:77:ef:49:7b:c5:fc:15:04
-##   user: rfitzjoh
-##   host: dyn3181-4.wlan.ic.ac.uk
-##   date: 2019-03-22 11:43:44</code></pre>
-<pre><code>## Added 1 key</code></pre>
+
+<pre><code class="r">cyphr::data_admin_authorise(data_dir, yes = TRUE, path_user = path_key_alice)
+</code></pre>
+
+<pre><code>## There is 1 request for access
+</code></pre>
+
+<pre><code>## Adding key 00:2c:d3:e7:0f:8f:bd:eb:62:41:56:86:5b:12:fb:4b
+##   user: rich
+##   host: kea
+##   date: 2020-01-14 15:11:51
+</code></pre>
+
+<pre><code>## Added 1 key
+</code></pre>
+
 <p>Bob can get the data key:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">key &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_key</span>(data_dir, <span class="dt">path_user =</span> path_key_bob)</a></code></pre></div>
+
+<pre><code class="r">key &lt;- cyphr::data_key(data_dir, path_user = path_key_bob)
+</code></pre>
+
 <p>Bob can read the secret data:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="kw">head</span>(cyphr<span class="op">::</span><span class="kw">decrypt</span>(<span class="kw">readRDS</span>(filename), key))</a></code></pre></div>
+
+<pre><code class="r">head(cyphr::decrypt(readRDS(filename), key))
+</code></pre>
+
 <pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ## 1          5.1         3.5          1.4         0.2  setosa
 ## 2          4.9         3.0          1.4         0.2  setosa
 ## 3          4.7         3.2          1.3         0.2  setosa
 ## 4          4.6         3.1          1.5         0.2  setosa
 ## 5          5.0         3.6          1.4         0.2  setosa
-## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
-</div>
-<div id="details-disclosure" class="section level2">
+## 6          5.4         3.9          1.7         0.4  setosa
+</code></pre>
+
 <h2>Details &amp; disclosure</h2>
-<p>Encryption does not work through security through obscurity; it works because we can rely on the underlying maths enough to be open about how things are stored and where.</p>
-<p>Most encryption libraries require some degree of security in the underlying software. Because of the way R works this is very difficult to guarantee; it is trivial to rewrite code in running packages to skip past verification checks. So this package is <em>not</em> designed to (or able to) avoid exploits in your running code; an attacker could intercept your private keys, the private key to the data, or skip the verification checks that are used to make sure that the keys you load are what they say they are. However, the <em>data</em> are safe; only people who have keys to the data will be able to read it.</p>
-<p><code>cyphr</code> uses two different encryption algorithms; it uses RSA encryption via the <code>openssl</code> package for user keys, because there is a common file format for these keys so it makes user configuration easier. It uses the modern sodium package (and through that the libsodium library) for data encryption because it is very fast and simple to work with. This does leave two possible points of weakness as a vulnerability in either of these libraries could lead to an exploit that could allow decryption of your data.</p>
-<p>Each user has a public/private key pair. Typically this is in <code>~/.ssh/id_rsa.pub</code> and <code>~/.ssh/id_rsa</code>, and if found these will be used. Alternatively the location of the keypair can be stored elsewhere and pointed at with the <code>USER_KEY</code> or <code>USER_PUBKEY</code> environment variables. The key may be password protected (and this is recommended!) and the password will be requested without ever echoing it to the terminal.</p>
+
+<p>Encryption does not work through security through obscurity; it
+works because we can rely on the underlying maths enough to be open
+about how things are stored and where.</p>
+
+<p>Most encryption libraries require some degree of security in
+the underlying software.  Because of the way R works this is very
+difficult to guarantee; it is trivial to rewrite code in running
+packages to skip past verification checks.  So this package is
+<em>not</em> designed to (or able to) avoid exploits in your running code;
+an attacker could intercept your private keys, the private key to
+the data, or skip the verification checks that are used to make
+sure that the keys you load are what they say they are.  However,
+the <em>data</em> are safe; only people who have keys to the data will be
+able to read it.</p>
+
+<p><code>cyphr</code> uses two different encryption algorithms; it uses RSA
+encryption via the <code>openssl</code> package for user keys, because there
+is a common file format for these keys so it makes user
+configuration easier.  It uses the modern sodium package (and
+through that the libsodium library) for data encryption because it
+is very fast and simple to work with.  This does leave two possible
+points of weakness as a vulnerability in either of these libraries
+could lead to an exploit that could allow decryption of your data.</p>
+
+<p>Each user has a public/private key pair.  Typically this is in
+<code>~/.ssh/id_rsa.pub</code> and <code>~/.ssh/id_rsa</code>, and if found these will be
+used.  Alternatively the location of the keypair can be stored
+elsewhere and pointed at with the <code>USER_KEY</code> or <code>USER_PUBKEY</code>
+environment variables.  The key may be password protected (and this
+is recommended!) and the password will be requested without ever
+echoing it to the terminal.</p>
+
 <p>The data directory has a hidden directory <code>.cyphr</code> in it.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1"><span class="kw">dir</span>(data_dir, <span class="dt">all.files =</span> <span class="ot">TRUE</span>, <span class="dt">no.. =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;.cyphr&quot;   &quot;iris.rds&quot;</code></pre>
-<p>This does not actually need to be stored with the data but it makes sense to (there are workflows where data is stored remotely where storing this directory might make sense). This directory contains a number of files; one for each person who has access to the data.</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1"><span class="kw">dir</span>(<span class="kw">file.path</span>(data_dir, <span class="st">&quot;.cyphr&quot;</span>))</a></code></pre></div>
-<pre><code>## [1] &quot;51413595e153747977ef497bc5fc1504&quot; &quot;bc8f63d7cbd55f176e9a0bd393ac3d1d&quot;
-## [3] &quot;test&quot;</code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1"><span class="kw">names</span>(cyphr<span class="op">::</span><span class="kw">data_admin_list_keys</span>(data_dir))</a></code></pre></div>
-<pre><code>## [1] &quot;51413595e153747977ef497bc5fc1504&quot; &quot;bc8f63d7cbd55f176e9a0bd393ac3d1d&quot;</code></pre>
-<p>(the file <code>test</code> is a small file encrypted with the data key used to verify everything is working OK).</p>
+
+<pre><code class="r">dir(data_dir, all.files = TRUE, no.. = TRUE)
+</code></pre>
+
+<pre><code>## [1] &quot;.cyphr&quot;   &quot;iris.rds&quot;
+</code></pre>
+
+<p>This does not actually need to be stored with the data but it
+makes sense to (there are workflows where data is stored remotely
+where storing this directory might make sense).  This directory
+contains a number of files; one for each person who has access to
+the data.</p>
+
+<pre><code class="r">dir(file.path(data_dir, &quot;.cyphr&quot;))
+</code></pre>
+
+<pre><code>## [1] &quot;002cd3e70f8fbdeb624156865b12fb4b&quot; &quot;e9f92de342cc9e016735d6b5ea0a3887&quot;
+## [3] &quot;test&quot;
+</code></pre>
+
+<pre><code class="r">names(cyphr::data_admin_list_keys(data_dir))
+</code></pre>
+
+<pre><code>## [1] &quot;002cd3e70f8fbdeb624156865b12fb4b&quot; &quot;e9f92de342cc9e016735d6b5ea0a3887&quot;
+</code></pre>
+
+<p>(the file <code>test</code> is a small file encrypted with the data key used
+to verify everything is working OK).</p>
+
 <p>Each file is stored in RDS format and is a list with elements:</p>
+
 <ul>
 <li>user: the reported user name of the person who created request for data</li>
 <li>host: the reported computer name</li>
 <li>date: the time the request was generated</li>
 <li>pub: the RSA public key of the user</li>
-<li>signature: the signature of the contents of “user”, “host”, “date”, “pub”. This ensures that the data have not been changed since they were created.</li>
-<li>key: the data key, encrypted with the user key. Without the private key, this cannot be used. With the user’s private key this can be used to generate the symmetric key to the data.</li>
+<li>signature: the signature of the contents of &ldquo;user&rdquo;, &ldquo;host&rdquo;,
+&ldquo;date&rdquo;, &ldquo;pub&rdquo;.  This ensures that the data have not been changed
+since they were created.</li>
+<li>key: the data key, encrypted with the user key.  Without the
+private key, this cannot be used.  With the user&#39;s private key
+this can be used to generate the symmetric key to the data.</li>
 </ul>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1">h &lt;-<span class="st"> </span><span class="kw">names</span>(cyphr<span class="op">::</span><span class="kw">data_admin_list_keys</span>(data_dir))[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb61-2" title="2"><span class="kw">readRDS</span>(<span class="kw">file.path</span>(data_dir, <span class="st">&quot;.cyphr&quot;</span>, h))</a></code></pre></div>
+
+<pre><code class="r">h &lt;- names(cyphr::data_admin_list_keys(data_dir))[[1]]
+readRDS(file.path(data_dir, &quot;.cyphr&quot;, h))
+</code></pre>
+
 <pre><code>## $user
-## [1] &quot;rfitzjoh&quot;
+## [1] &quot;rich&quot;
 ## 
 ## $host
-## [1] &quot;dyn3181-4.wlan.ic.ac.uk&quot;
+## [1] &quot;kea&quot;
 ## 
 ## $date
-## [1] &quot;2019-03-22 11:43:44 GMT&quot;
+## [1] &quot;2020-01-14 15:11:51 GMT&quot;
 ## 
 ## $pub
 ## [2048-bit rsa public key]
-## md5: 51413595e153747977ef497bc5fc1504
+## md5: 002cd3e70f8fbdeb624156865b12fb4b
 ## 
 ## $signature
-##   [1] a8 84 54 c6 8e 6a c4 c6 fb 29 b9 9d 82 c0 bb 21 4c fd 37 61 14 07 58
-##  [24] ab 29 82 4e 42 9b d1 1b 7f 13 8f 23 47 5a c5 f1 67 01 29 a8 96 b5 77
-##  [47] de c9 e0 7b 6b 16 21 da 34 c0 d4 ac 2f aa ec 0e d2 d5 09 cb 2c 85 1f
-##  [70] 20 df 24 2c f1 13 7e d2 98 90 bb fc 30 ce cb fb 4d 3c fc ac 82 51 a5
-##  [93] a5 85 1c 7c 2a 5a 5d 1a d8 d9 ea 67 21 38 93 b7 fd ee d4 e6 c8 a0 a2
-## [116] 96 4a e7 57 64 41 9a 12 76 00 af f8 70 43 da fd 31 8e 50 bd 34 8d 3e
-## [139] 2c 75 4b 18 78 4e 68 46 7e f7 c0 a3 ae 7b ec b6 f2 be 86 6a d5 f7 54
-## [162] 2f 76 65 39 2b 28 1a ea 3f 41 a1 f1 1a e5 eb ef f7 6a d8 40 2a c2 bb
-## [185] 19 c6 4c c5 ca ba e8 46 89 75 ff 57 20 e8 62 b7 7d f8 4a 5e d2 15 38
-## [208] 4b 1b 09 25 5b 5e 1f 06 fb ec 07 1c 09 0e ac f7 d5 1a 88 09 fc 8c cf
-## [231] 53 64 ab bd 31 69 f6 84 7d fe 98 d8 52 0b e1 96 d7 96 54 2d 70 d0 48
-## [254] 7b 49 39
+##   [1] 82 87 28 96 19 5a 01 da ae b0 22 b1 d6 33 43 50 99 a8 b1 bd ab 01 f3
+##  [24] 9e fc 92 8b 8b 7f d1 c0 35 c9 fb 66 c1 37 c4 a4 a4 be db 24 ce 83 49
+##  [47] 69 7a 91 d4 0d a5 ac 74 86 fa 55 52 b2 82 73 f6 ee c7 2f cb 41 c1 6d
+##  [70] 12 13 96 4f be 29 dc d6 17 2a 20 2f 09 60 d4 67 f3 32 30 1a 41 95 8b
+##  [93] aa 65 10 12 3b c8 b2 94 da 1b c0 1d bd bf a3 42 e0 cc 3b b8 a2 aa 03
+## [116] 07 d6 c0 7e fd a2 22 28 7e 0d 76 23 0d 8b e4 ba 45 72 04 30 68 7a 04
+## [139] 26 51 92 57 35 2c ba 54 88 ab bc 9b a0 2f 26 31 9d 5d db 4f 43 0a 2f
+## [162] 1d d0 df 0b 95 8a a9 3f df 97 a9 31 0e c5 14 f5 fb 46 12 3e ed 45 6f
+## [185] 82 21 4c dd 83 49 4b cd 0d 2b e8 dc 9e 89 11 76 84 aa 64 1c 06 91 c7
+## [208] fc 3b b2 9e 1a 3a b8 2f ce 55 f6 5f c7 17 94 98 34 db 7c 91 07 a2 72
+## [231] 78 6a 3a ea 1e 7a 27 99 b7 5e aa c5 d2 40 b4 d9 c5 0e 37 b3 6c 81 fa
+## [254] f8 92 5d
 ## 
 ## $key
-##   [1] 98 39 c8 2f 8b 6a 5b 2e 8b 92 48 15 41 0f c5 ae b7 43 5b ad 9e d8 68
-##  [24] 56 04 3e 24 42 ca c9 7e d6 61 d5 7c 23 60 40 1f 24 51 98 73 a6 25 41
-##  [47] b6 c5 c2 6b 58 16 69 54 d4 82 8e ad 94 32 6c 35 70 d1 72 5a 48 48 39
-##  [70] 89 bd 22 84 a1 9b 17 21 bc 44 6a 95 4d df b6 71 f4 8c 96 a7 15 2a ba
-##  [93] 0f 3c 6b f0 d4 dc 4d 44 16 74 ea f8 8e 5f 04 9a 0d bd 14 2f 96 7b c7
-## [116] 8a 8a 4f 4d b3 92 3b f1 bf 34 8e f4 cb 8a 18 ef 6f 7f dd 56 bf 7b cd
-## [139] 07 6d cc e8 d9 bd fa a9 73 ee 6b 3e d8 d9 8b 48 d8 42 e2 fb cc 6e fe
-## [162] ef 3b 9c fc 8d ab 67 64 c8 1b 16 cb 8c 55 a7 ac 36 3e ab 33 7c 83 2b
-## [185] f2 e4 41 b9 35 3e 8c 6f 79 28 c9 cd 2d a1 38 9d 10 fb 03 c3 44 12 67
-## [208] e9 d9 78 d6 26 fa c5 12 ae 05 da 0f d0 65 a3 2c a6 1b ba eb fe ae fc
-## [231] fa 12 34 3b 19 05 c8 b4 bd 8f 97 e5 0e 1d 39 84 4e 3b b0 f4 f7 ae 56
-## [254] ec 7e 12</code></pre>
-<p>You can see that the hash of the public key is the same as name of the stored file here (which is used to prevent collisions when multiple people request access at the same time).</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">h</a></code></pre></div>
-<pre><code>## [1] &quot;51413595e153747977ef497bc5fc1504&quot;</code></pre>
-<p>When a request is posted it is an RDS file with all of the above except for the <code>key</code> element, which is added during authorisation.</p>
-<p>(Note that the verification relies on the package code not being attacked, and given R’s highly dynamic nature an attacker could easily swap out the definition for the verification function with something that always returns <code>TRUE</code>.)</p>
-<p>When an authorised user creates the <code>data_key</code> object (which allows decryption of the data) <code>secret</code> will:</p>
+##   [1] 2d a8 12 b6 ce b1 75 9f bb d0 3c 4b 98 ec 1e 01 cf b7 c8 a9 dd 4f 98
+##  [24] 92 19 2e 7c 58 c2 d2 2e 47 82 2f 23 da 89 6f e2 6e 64 e3 09 ad 72 11
+##  [47] 96 7e 2b 6e 4b a2 fd 99 49 b1 88 ca 6c f6 07 89 98 df 90 f0 92 49 f0
+##  [70] fe 03 01 30 d1 40 6a 82 65 b7 9d 46 41 fc 1d 34 7f c0 be 49 1c 13 1b
+##  [93] 9f 32 ad a7 98 70 b3 98 1e 37 5f f9 c9 9a 2d d4 d0 9e 02 aa 20 c7 4c
+## [116] b0 6b d4 c1 e9 64 3d e0 6a 96 2e 07 04 8a f8 e1 3c 12 eb f6 e3 5b 09
+## [139] ac 8c a3 58 2d 1e 05 b4 e8 93 b8 65 44 a3 91 a8 c5 e9 9a b7 e5 74 9c
+## [162] d8 0a 77 6f 12 06 78 d2 68 fd 12 18 66 49 dc 3c 37 8f 7b ce 48 30 b8
+## [185] f0 52 de e4 86 9a 28 e8 36 db 88 b6 01 c5 e9 c7 2b 63 01 9b 43 15 d1
+## [208] c3 7e c7 a0 e1 80 57 91 16 2c 2e de 50 9f 10 f1 94 fb 0e 15 8a a8 32
+## [231] 73 cc b5 8d 5f e3 f8 1a e3 e6 bc 38 9d de 66 d0 2f 7b 40 85 d4 5b 7a
+## [254] 90 6e b7
+</code></pre>
+
+<p>You can see that the hash of the public key is the same as name of
+the stored file here (which is used to prevent collisions when
+multiple people request access at the same time).</p>
+
+<pre><code class="r">h
+</code></pre>
+
+<pre><code>## [1] &quot;002cd3e70f8fbdeb624156865b12fb4b&quot;
+</code></pre>
+
+<p>When a request is posted it is an RDS file with all of the above
+except for the <code>key</code> element, which is added during authorisation.</p>
+
+<p>(Note that the verification relies on the package code not being
+attacked, and given R&#39;s highly dynamic nature an attacker could
+easily swap out the definition for the verification function with
+something that always returns <code>TRUE</code>.)</p>
+
+<p>When an authorised user creates the <code>data_key</code> object (which
+allows decryption of the data) <code>secret</code> will:</p>
+
 <ul>
 <li>read their private user key (probably from <code>~/.ssh/id_rsa</code>)</li>
-<li>read the encrypted data key from the data directory (the <code>$key</code> element from the list above).</li>
-<li>decrypt this data key using their user key to yield the the data symmetric key.</li>
+<li>read the encrypted data key from the data directory (the <code>$key</code>
+element from the list above).</li>
+<li>decrypt this data key using their user key to yield the the data
+symmetric key.</li>
 </ul>
-</div>
-<div id="limitations" class="section level2">
+
 <h2>Limitations</h2>
-<p>In the Dropbox scenario, non-password protected keys will afford only limited protection. This is because even though the keys and data are stored separately on Dropbox, they will be in the same place on a local computer; if that computer is lost then the only thing preventing an attacker recovering the data is security through obscurity (the data would appear to be random junk but they will be able to run your analysis scripts as easily as you can). Password protected keys will improve this situation considerably as without a password the data cannot be recovered.</p>
-<p>The data is not encrypted during a running R session. R allows arbitrary modification of code at runtime so this package provides no security from the point where the data can be decrypted. If your computer was compromised then stealing the data while you are running R should be assumed to be straightforward.</p>
-</div>
 
+<p>In the Dropbox scenario, non-password protected keys will afford
+only limited protection.  This is because even though the keys and
+data are stored separately on Dropbox, they will be in the same
+place on a local computer; if that computer is lost then the only
+thing preventing an attacker recovering the data is security
+through obscurity (the data would appear to be random junk but
+they will be able to run your analysis scripts as easily as you
+can).  Password protected keys will improve this situation
+considerably as without a password the data cannot be recovered.</p>
 
-
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
+<p>The data is not encrypted during a running R session.  R allows
+arbitrary modification of code at runtime so this package provides
+no security from the point where the data can be decrypted.  If
+your computer was compromised then stealing the data while you are
+running R should be assumed to be straightforward.</p>
 
 </body>
+
 </html>
