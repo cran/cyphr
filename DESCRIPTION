@@ -1,6 +1,6 @@
 Package: cyphr
 Title: High Level Encryption Wrappers
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: person("Rich", "FitzJohn", role = c("aut", "cre"),
     email = "rich.fitzjohn@gmail.com")
 Description: Encryption wrappers, using low-level support from
@@ -21,8 +21,8 @@ VignetteBuilder: rmarkdown, knitr
 Encoding: UTF-8
 Language: en-GB
 NeedsCompilation: no
-Packaged: 2020-01-14 15:11:52 UTC; rich
+Packaged: 2020-03-02 14:34:55 UTC; rich
 Author: Rich FitzJohn [aut, cre]
 Maintainer: Rich FitzJohn <rich.fitzjohn@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-01-14 18:10:03 UTC
+Date/Publication: 2020-03-02 16:20:02 UTC
