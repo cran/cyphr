@@ -15,7 +15,7 @@ is_directory <- function(x) {
   file.exists(x) && file.info(x, extra_cols = FALSE)[["isdir"]]
 }
 
-Sys_which <- function(name) {
+sys_which <- function(name) {
   path <- Sys.which(name)
   if (path == "") {
     stop(sprintf("Can not find '%s'", name))
@@ -66,7 +66,6 @@ tempfile_keep_ext <- function(filename, local = FALSE) {
     tempfile()
   } else {
     dir <- if (local) dirname(filename) else tempdir()
-    re <- ".*(\\.[^.]+)$"
     r <- regexpr("\\.([[:alnum:]]+)$", filename)
     base <- basename(filename)
     if (r > 0) {
@@ -111,11 +110,6 @@ find_file_descend <- function(target, start = ".", limit = "/") {
   ret
 }
 
-using_git <- function(path) {
-  tryCatch(!is.null(find_file_descend(".git", path)),
-           error = function(e) FALSE)
-}
-
 ## Replace with ask once it's on CRAN?
 prompt_confirm <- function(msg = "continue?", valid = c(n = FALSE, y = TRUE),
                            default = names(valid)[[1]]) {
@@ -139,4 +133,16 @@ prompt_confirm <- function(msg = "continue?", valid = c(n = FALSE, y = TRUE),
 ## Factoring out so that it is mockable:
 read_line <- function(prompt) {
   readline(prompt = prompt) # nocov
+}
+
+`%||%` <- function(a, b) { # nolint
+  if (is.null(a)) b else a
+}
+
+cyphr_file <- function(...) {
+  system.file(..., package = "cyphr", mustWork = TRUE)
+}
+
+file_copy <- function(...) {
+  stopifnot(file.copy(...))
 }

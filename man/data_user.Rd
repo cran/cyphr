@@ -5,21 +5,42 @@
 \alias{data_key}
 \title{User commands}
 \usage{
-data_request_access(path_data, path_user = NULL, quiet = FALSE)
+data_request_access(path_data = NULL, path_user = NULL, quiet = FALSE)
 
-data_key(path_data, path_user = NULL, test = TRUE, quiet = FALSE)
+data_key(
+  path_data = NULL,
+  path_user = NULL,
+  test = TRUE,
+  quiet = FALSE,
+  cache = TRUE
+)
 }
 \arguments{
-\item{path_data}{Path to the data}
+\item{path_data}{Path to the data.  If not given, then we look
+recursively down below the working directory for a ".cyphr"
+directory, and use that as the data directory.}
 
 \item{path_user}{Path to the directory with your user key.
-Usually this can be omitted.  Use the \code{cyphr.user.path}
-global option (i.e., via \code{options()}) to set this more
-conveniently.}
+Usually this can be omitted.  This argument is passed in as both
+\code{pub} and \code{key} to \code{\link{keypair_openssl}}.
+Briefly, if this argument is not given we look at the
+environment variables \code{USER_PUBKEY} and \code{USER_KEY} -
+if set then these must refer to path of your public and private
+keys.  If these environment variables are not set then we fall
+back on \\code{~/.ssh/id_rsa.pub} and \code{~/.ssh/id_rsa},
+which should work in most environments.  Alternatively, provide
+a path to a directory where the file \code{id_rsa.pub} and
+\code{id_rsa} can be found.}
 
 \item{quiet}{Suppress printing of informative messages.}
 
 \item{test}{Test that the encryption is working?  (Recommended)}
+
+\item{cache}{Cache the key within the session.  This will be
+useful if you are using ssh keys that have passwords, as if the
+key is found within the cache, then you will not have to
+re-enter your password.  Using \code{cache = FALSE} neither
+looks for the key in the cache, nor saves it.}
 }
 \description{
 User commands

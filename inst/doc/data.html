@@ -282,10 +282,10 @@ your personal key.  Note that the data key is never stored directly</p>
 <pre><code>## Authorising ourselves
 </code></pre>
 
-<pre><code>## Adding key 0b:da:e1:95:31:69:ef:88:27:3b:c9:aa:79:95:3a:a3
+<pre><code>## Adding key 12:1b:51:65:10:8d:73:6c:cb:8e:6e:f8:dd:f7:7b:2e:d1:96:48:15:81:b2:e5:fb:3e:a0:2b:45:56:68:26:12
 ##   user: rich
 ##   host: kea
-##   date: 2020-03-02 14:34:54
+##   date: 2020-03-09 15:55:53
 </code></pre>
 
 <pre><code>## Verifying
@@ -305,7 +305,7 @@ been rerun and the data key will not be regenerated.</p>
 <pre><code class="r">cyphr::data_admin_init(data_dir, path_user = path_key_alice)
 </code></pre>
 
-<pre><code>## Already set up
+<pre><code>## Already set up at /tmp/RtmpYBipYM/data
 </code></pre>
 
 <pre><code>## Verifying
@@ -372,12 +372,6 @@ message explaining how you might request access:</p>
 <pre><code class="r">key_bob &lt;- cyphr::data_key(data_dir, path_user = path_key_bob)
 </code></pre>
 
-<pre><code>## Error: Key file not found; you may not have access
-## (looked in /tmp/RtmpoldnqL/data/.cyphr/e44b5790cfb028a883790f4ac341f053)
-## To request access, run:
-##   data_request_access(&quot;/tmp/RtmpoldnqL/data&quot;)
-</code></pre>
-
 <p>But <code>bob</code> is your collaborator and needs access!  What they need
 to do is run:</p>
 
@@ -387,10 +381,15 @@ to do is run:</p>
 <pre><code>## A request has been added
 </code></pre>
 
-<pre><code>## Email someone with access to add you.
-</code></pre>
-
-<pre><code>##  hash: e4:4b:57:90:cf:b0:28:a8:83:79:0f:4a:c3:41:f0:53
+<pre><code>## Email someone with access to add you
+## 
+##     hash: 50:47:97:70:3f:8d:8a:9c:57:5b:88:68:1e:f4:1d:6e:f4:bb:61:ec:d5:7d:c0:87:2b:98:9e:51:82:98:7d:3d
+## 
+## If you are using git, you will need to commit and push first:
+## 
+##     git add .cyphr
+##     git commit -m &quot;Please add me to the dataset&quot;
+##     git push
 </code></pre>
 
 <p>(again, ordinarily you would not need the <code>bob</code> bit here)</p>
@@ -406,13 +405,13 @@ req
 </code></pre>
 
 <pre><code>## 1 key:
-##   e4:4b:57:90:cf:b0:28:a8:83:79:0f:4a:c3:41:f0:53
+##   50:47:97:70:3f:8d:8a:9c:57:5b:88:68:1e:f4:1d:6e:f4:bb:61:ec:d5:7d:c0:87:2b:98:9e:51:82:98:7d:3d
 ##     user: rich
 ##     host: kea
-##     date: 2020-03-02 14:34:54
+##     date: 2020-03-09 15:55:53
 </code></pre>
 
-<p>We can see the same hash here as above (<code>e44b5790cfb028a883790f4ac341f053</code>)</p>
+<p>We can see the same hash here as above (<code>504797703f8d8a9c575b88681ef41d6ef4bb61ecd57dc0872b989e5182987d3d</code>)</p>
 
 <p>&hellip;and then grant access to them with the
 <code>cyphr::data_admin_authorise</code> function.</p>
@@ -423,13 +422,20 @@ req
 <pre><code>## There is 1 request for access
 </code></pre>
 
-<pre><code>## Adding key e4:4b:57:90:cf:b0:28:a8:83:79:0f:4a:c3:41:f0:53
+<pre><code>## Adding key 50:47:97:70:3f:8d:8a:9c:57:5b:88:68:1e:f4:1d:6e:f4:bb:61:ec:d5:7d:c0:87:2b:98:9e:51:82:98:7d:3d
 ##   user: rich
 ##   host: kea
-##   date: 2020-03-02 14:34:54
+##   date: 2020-03-09 15:55:53
 </code></pre>
 
 <pre><code>## Added 1 key
+</code></pre>
+
+<pre><code>## If you are using git, you will need to commit and push:
+## 
+##     git add .cyphr
+##     git commit -m &quot;Authorised rich&quot;
+##     git push
 </code></pre>
 
 <p>If you do not specify <code>yes = TRUE</code> will prompt for confirmation at
@@ -449,14 +455,14 @@ each key added.</p>
 </code></pre>
 
 <pre><code>## 2 keys:
-##   0b:da:e1:95:31:69:ef:88:27:3b:c9:aa:79:95:3a:a3
+##   12:1b:51:65:10:8d:73:6c:cb:8e:6e:f8:dd:f7:7b:2e:d1:96:48:15:81:b2:e5:fb:3e:a0:2b:45:56:68:26:12
 ##     user: rich
 ##     host: kea
-##     date: 2020-03-02 14:34:54
-##   e4:4b:57:90:cf:b0:28:a8:83:79:0f:4a:c3:41:f0:53
+##     date: 2020-03-09 15:55:53
+##   50:47:97:70:3f:8d:8a:9c:57:5b:88:68:1e:f4:1d:6e:f4:bb:61:ec:d5:7d:c0:87:2b:98:9e:51:82:98:7d:3d
 ##     user: rich
 ##     host: kea
-##     date: 2020-03-02 14:34:54
+##     date: 2020-03-09 15:55:53
 </code></pre>
 
 <p><strong>Finally</strong>, as soon as the authorisation has happened, the user
@@ -479,7 +485,7 @@ head(cyphr::decrypt(readRDS(filename), key_bob))
 
 <p>As above, but with less discussion:</p>
 
-<p>Setup, on alice&#39;s computer computer:</p>
+<p>Setup, on Alice&#39;s computer:</p>
 
 <pre><code class="r">cyphr::data_admin_init(data_dir, path_user = path_key_alice)
 </code></pre>
@@ -490,10 +496,10 @@ head(cyphr::decrypt(readRDS(filename), key_bob))
 <pre><code>## Authorising ourselves
 </code></pre>
 
-<pre><code>## Adding key 0b:da:e1:95:31:69:ef:88:27:3b:c9:aa:79:95:3a:a3
+<pre><code>## Adding key 12:1b:51:65:10:8d:73:6c:cb:8e:6e:f8:dd:f7:7b:2e:d1:96:48:15:81:b2:e5:fb:3e:a0:2b:45:56:68:26:12
 ##   user: rich
 ##   host: kea
-##   date: 2020-03-02 14:34:54
+##   date: 2020-03-09 15:55:53
 </code></pre>
 
 <pre><code>## Verifying
@@ -509,7 +515,7 @@ head(cyphr::decrypt(readRDS(filename), key_bob))
 <pre><code class="r">cyphr::encrypt(saveRDS(iris, filename), key)
 </code></pre>
 
-<p>Request access, on Bob&#39;s computer computer:</p>
+<p>Request access, on Bob&#39;s computer:</p>
 
 <pre><code class="r">hash &lt;- cyphr::data_request_access(data_dir, path_user = path_key_bob)
 </code></pre>
@@ -517,10 +523,15 @@ head(cyphr::decrypt(readRDS(filename), key_bob))
 <pre><code>## A request has been added
 </code></pre>
 
-<pre><code>## Email someone with access to add you.
-</code></pre>
-
-<pre><code>##  hash: e4:4b:57:90:cf:b0:28:a8:83:79:0f:4a:c3:41:f0:53
+<pre><code>## Email someone with access to add you
+## 
+##     hash: 50:47:97:70:3f:8d:8a:9c:57:5b:88:68:1e:f4:1d:6e:f4:bb:61:ec:d5:7d:c0:87:2b:98:9e:51:82:98:7d:3d
+## 
+## If you are using git, you will need to commit and push first:
+## 
+##     git add .cyphr
+##     git commit -m &quot;Please add me to the dataset&quot;
+##     git push
 </code></pre>
 
 <p>Alice authorises this request::</p>
@@ -531,13 +542,20 @@ head(cyphr::decrypt(readRDS(filename), key_bob))
 <pre><code>## There is 1 request for access
 </code></pre>
 
-<pre><code>## Adding key e4:4b:57:90:cf:b0:28:a8:83:79:0f:4a:c3:41:f0:53
+<pre><code>## Adding key 50:47:97:70:3f:8d:8a:9c:57:5b:88:68:1e:f4:1d:6e:f4:bb:61:ec:d5:7d:c0:87:2b:98:9e:51:82:98:7d:3d
 ##   user: rich
 ##   host: kea
-##   date: 2020-03-02 14:34:54
+##   date: 2020-03-09 15:55:53
 </code></pre>
 
 <pre><code>## Added 1 key
+</code></pre>
+
+<pre><code>## If you are using git, you will need to commit and push:
+## 
+##     git add .cyphr
+##     git commit -m &quot;Authorised rich&quot;
+##     git push
 </code></pre>
 
 <p>Bob can get the data key:</p>
@@ -601,23 +619,24 @@ echoing it to the terminal.</p>
 <pre><code>## [1] &quot;.cyphr&quot;   &quot;iris.rds&quot;
 </code></pre>
 
-<p>This does not actually need to be stored with the data but it
-makes sense to (there are workflows where data is stored remotely
-where storing this directory might make sense).  This directory
+<p>This does not actually need to be stored with the data but it makes
+sense to (there are workflows where data is stored remotely where
+storing this directory might make sense).  The &ldquo;keys&rdquo; directory
 contains a number of files; one for each person who has access to
 the data.</p>
 
-<pre><code class="r">dir(file.path(data_dir, &quot;.cyphr&quot;))
+<pre><code class="r">dir(file.path(data_dir, &quot;.cyphr&quot;, &quot;keys&quot;))
 </code></pre>
 
-<pre><code>## [1] &quot;0bdae1953169ef88273bc9aa79953aa3&quot; &quot;e44b5790cfb028a883790f4ac341f053&quot;
-## [3] &quot;test&quot;
+<pre><code>## [1] &quot;121b5165108d736ccb8e6ef8ddf77b2ed196481581b2e5fb3ea02b4556682612&quot;
+## [2] &quot;504797703f8d8a9c575b88681ef41d6ef4bb61ecd57dc0872b989e5182987d3d&quot;
 </code></pre>
 
 <pre><code class="r">names(cyphr::data_admin_list_keys(data_dir))
 </code></pre>
 
-<pre><code>## [1] &quot;0bdae1953169ef88273bc9aa79953aa3&quot; &quot;e44b5790cfb028a883790f4ac341f053&quot;
+<pre><code>## [1] &quot;121b5165108d736ccb8e6ef8ddf77b2ed196481581b2e5fb3ea02b4556682612&quot;
+## [2] &quot;504797703f8d8a9c575b88681ef41d6ef4bb61ecd57dc0872b989e5182987d3d&quot;
 </code></pre>
 
 <p>(the file <code>test</code> is a small file encrypted with the data key used
@@ -630,16 +649,13 @@ to verify everything is working OK).</p>
 <li>host: the reported computer name</li>
 <li>date: the time the request was generated</li>
 <li>pub: the RSA public key of the user</li>
-<li>signature: the signature of the contents of &ldquo;user&rdquo;, &ldquo;host&rdquo;,
-&ldquo;date&rdquo;, &ldquo;pub&rdquo;.  This ensures that the data have not been changed
-since they were created.</li>
 <li>key: the data key, encrypted with the user key.  Without the
 private key, this cannot be used.  With the user&#39;s private key
 this can be used to generate the symmetric key to the data.</li>
 </ul>
 
 <pre><code class="r">h &lt;- names(cyphr::data_admin_list_keys(data_dir))[[1]]
-readRDS(file.path(data_dir, &quot;.cyphr&quot;, h))
+readRDS(file.path(data_dir, &quot;.cyphr&quot;, &quot;keys&quot;, h))
 </code></pre>
 
 <pre><code>## $user
@@ -649,37 +665,24 @@ readRDS(file.path(data_dir, &quot;.cyphr&quot;, h))
 ## [1] &quot;kea&quot;
 ## 
 ## $date
-## [1] &quot;2020-03-02 14:34:54 GMT&quot;
+## [1] &quot;2020-03-09 15:55:53 GMT&quot;
 ## 
 ## $pub
 ## [2048-bit rsa public key]
-## md5: 0bdae1953169ef88273bc9aa79953aa3
-## 
-## $signature
-##   [1] bf 86 db 8f ab e7 33 00 9f c8 7a 27 75 59 a7 41 58 7c 91 48 b3 d6 42 4d 8f
-##  [26] e5 b2 59 32 86 fc 13 7f 65 4d 08 54 8f 71 d0 34 b0 d1 66 b2 0e 6c bc f7 bb
-##  [51] 87 92 5d b1 09 7f a0 b3 9f b2 50 b2 b7 ab 82 66 c7 b6 35 93 68 de 54 96 8d
-##  [76] ad ee 07 95 d5 8b aa bc 47 68 f1 16 09 a8 f6 6c 24 b2 48 83 85 b0 5e 68 6b
-## [101] da e3 20 27 fe 6a fb 7c ca 87 d6 93 eb fd f4 3a 04 e6 57 71 a6 6e ea 7e 21
-## [126] 4c c9 ed 5c b4 a3 f0 19 ad c2 f3 f2 0f 0b b6 85 e2 6d e3 61 8e 1b 88 50 9f
-## [151] 44 4c d8 98 99 0d ef 4d fc 81 ec bd 36 94 96 33 52 91 e5 6a 9a f0 43 5f 3c
-## [176] 94 ba 75 46 33 c7 8b e7 d0 38 d0 d5 57 20 ba e8 d0 41 b0 fb c2 75 39 8c ef
-## [201] 13 fb 8f 2f 19 88 a6 ce 66 50 db 3c ea 64 44 b1 c1 0c 9c f7 a9 10 6c 08 59
-## [226] 2e 82 c1 cb 62 bd 7f 76 85 01 ff 03 10 4d 88 c5 7a 4d 6c 52 1a dc e5 20 b6
-## [251] 68 84 07 65 4c ad
+## md5: 8d65780c08a0f83e1725b290f7925083
 ## 
 ## $key
-##   [1] 69 cf 34 cf 6b 58 03 cf 6a 01 34 22 43 34 25 32 0f 2f 77 ae 63 ea fa 87 a4
-##  [26] 9f e5 1a 96 79 e3 b1 03 02 91 83 70 a3 b4 52 96 a0 e6 6b 70 ef 97 5a b9 b0
-##  [51] f5 ac 50 4e 16 12 90 60 81 31 44 c0 b9 64 0a e3 6f f7 91 02 d7 c8 97 c7 b1
-##  [76] 7c 51 2b 28 12 77 27 b9 96 26 84 18 8f 23 06 4b ae 41 a7 25 30 c0 11 06 5e
-## [101] 32 be 8d 98 f0 b8 4f 17 2a 5c d2 43 f9 fa 57 49 4d 45 7e e5 f2 07 86 d1 2c
-## [126] 91 b7 79 4a 1d 3f 3e 10 5c cf 73 aa bf 2e b0 12 fa ca b8 c7 d8 8c db 53 d1
-## [151] bb 7a 72 5f ce 21 f0 0c 1b ef e0 5e 0c ed 4e 4c 4d cd bf 0e 10 a6 c0 ee 74
-## [176] 87 e8 e8 b8 00 d3 48 ee 72 1c 4a 94 c1 17 6b 2d e1 38 0f 02 c6 58 56 f2 6b
-## [201] f0 32 f3 94 1f 7d 15 df e3 07 22 80 02 0c 4e 87 9c 6e 54 3b ca 20 75 6a 2e
-## [226] 72 05 65 9b 7c a1 41 25 d5 85 f2 1d 13 4e 28 07 93 32 30 9b 0d 20 71 14 bb
-## [251] 2c 7f 46 1d 9e 12
+##   [1] 4d ff d1 64 dc e0 2c 94 b9 6b 0a 33 0a 89 d4 f6 e4 5b 82 1e a6 42 3e 96 1d
+##  [26] f9 11 31 9b 5e 62 05 5a ae 17 26 63 8d 8c ac 1d 58 23 e0 65 70 ff 3c 0b 1a
+##  [51] 42 3b 15 f6 b6 ab 1f 9b 6d fb ba 8b 1c a5 ce 1b 16 4f e1 97 43 19 a4 ad 12
+##  [76] 7c 00 07 e4 3b f0 1a db a5 7b bc ff 3c 5b 0f 2c 9c 29 62 c7 65 27 2c 1e 0e
+## [101] b1 21 e9 81 c7 e8 d0 83 e7 f8 e4 34 a5 da 89 f3 5f 8e de df 5c 59 1a 43 23
+## [126] 8f 33 32 e0 07 cf 5c 8b 76 8b af f1 1e f5 30 80 8a 82 35 12 95 7c 19 3c 98
+## [151] c4 c1 ce b6 f6 95 1d 3f 72 c8 d0 8b d5 64 00 68 4f e8 e8 8f 5a 0f 91 ce a6
+## [176] 9b 5c 1e f6 1c 54 36 d9 60 86 cf 8b af 3c b5 ff 60 29 34 06 24 c2 3a 4f b0
+## [201] 08 a2 d7 68 eb 1b 07 0a 21 c7 47 1c 6b f7 51 0f 30 f9 88 72 a3 17 6a 4f 39
+## [226] 74 93 4f 4b 8a 88 00 8e 75 3d 75 28 8b cc 43 d3 85 69 1e 75 95 b1 bb 68 9a
+## [251] e8 82 ff 66 53 af
 </code></pre>
 
 <p>You can see that the hash of the public key is the same as name of
@@ -689,7 +692,7 @@ multiple people request access at the same time).</p>
 <pre><code class="r">h
 </code></pre>
 
-<pre><code>## [1] &quot;0bdae1953169ef88273bc9aa79953aa3&quot;
+<pre><code>## [1] &quot;121b5165108d736ccb8e6ef8ddf77b2ed196481581b2e5fb3ea02b4556682612&quot;
 </code></pre>
 
 <p>When a request is posted it is an RDS file with all of the above

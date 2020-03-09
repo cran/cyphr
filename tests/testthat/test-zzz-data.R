@@ -67,7 +67,7 @@ test_that("grant access", {
   expect_identical(h2, h)
 
   pair2 <- data_load_keypair_user("pair2")
-  expect_identical(h, openssl_fingerprint(pair2$pub))
+  expect_identical(h, data_key_fingerprint(pair2$pub, data_schema_version()))
 
   ## This is the request:
   path_req <- file.path(data_path_request(path), bin2str(h, ""))
@@ -77,9 +77,6 @@ test_that("grant access", {
   expect_identical(dat_req$host, Sys.info()[["nodename"]])
   expect_identical(dat_req$user, Sys.info()[["user"]])
   expect_is(dat_req$date, "POSIXt")
-  expect_true(openssl::signature_verify(data_key_prep(dat_req),
-                                        dat_req$signature,
-                                        pubkey = dat_req$pub))
 
   ## Try loading requests:
   keys <- data_load_request(path, NULL, quiet)
@@ -126,6 +123,12 @@ test_that("not set up", {
   path <- tempfile()
   dir.create(path, FALSE, TRUE)
   expect_error(data_key(path, "pair2"), "cyphr not set up for")
+  expect_error(
+    with_dir(path, data_key(NULL, "pair2")),
+    "cyphr not set up for")
+  expect_error(
+    with_dir(path, data_key(path_user = "pair2")),
+    "cyphr not set up for")
   res <- data_admin_init(path, "pair1")
   expect_error(data_key(path, "pair2"),
                "Key file not found; you may not have access")
@@ -216,4 +219,166 @@ test_that("gracefully fail to initialise", {
                    "Removing data key"))
   expect_equal(dir(data_path_cyphr(path), all.files = TRUE, no.. = TRUE),
                character(0))
+})
+
+
+## This set of tests verifies that if we call the data functions
+## (except for init) we can use a subdirectory of the cyphr
+## directories without a problem.
+test_that("Work from a subdirectory", {
+  path <- tempfile()
+  dir.create(path, FALSE, TRUE)
+  res <- data_admin_init(path, "pair1", TRUE)
+  sub <- file.path(path, "a/b/c")
+  dir.create(sub, FALSE, TRUE)
+  ## Need full paths to keys as they will be in a surprising location
+  ## otherwise.
+  pair1 <- normalizePath("pair1")
+  pair2 <- normalizePath("pair2")
+
+  h <- with_dir(sub,
+                data_request_access(path_user = pair2))
+
+  res <- with_dir(sub, data_admin_list_requests())
+  expect_equal(length(res), 1L)
+  expect_equal(names(res), unclass(as.character(h)))
+
+  with_dir(sub,
+           data_admin_authorise(path_user = pair1, yes = TRUE))
+
+  res <- with_dir(sub, data_admin_list_keys())
+  expect_equal(length(res), 2L)
+
+  k1 <- with_dir(sub, data_key(path_user = pair1))
+  k2 <- with_dir(sub, data_key(path_user = pair2))
+  expect_identical(k1$key(), k2$key())
+})
+
+
+test_that("Custom messages", {
+  path <- tempfile()
+  dir.create(path, FALSE, TRUE)
+  res <- data_admin_init(path, "pair1", TRUE)
+
+  writeLines("my custom $HASH request message",
+             file.path(data_path_template(path), "request"))
+  writeLines("my custom $USERS authorise message",
+             file.path(data_path_template(path), "authorise"))
+
+  res1 <- testthat::evaluate_promise(
+    data_request_access(path, "pair2"))
+  res2 <- testthat::evaluate_promise(
+    data_admin_authorise(path, res1$result, "pair1", TRUE))
+
+  expect_match(
+    res1$messages,
+    "my custom [[:xdigit:]:]+ request message",
+    all = FALSE)
+  expect_match(
+    res2$messages,
+    "my custom .+ authorise message",
+    all = FALSE)
+})
+
+
+test_that("fingerprint versioning", {
+  k <- data_load_keypair_user("pair1")$pub
+  expect_identical(
+    data_key_fingerprint(k, numeric_version("1.0.3")),
+    openssl::fingerprint(k, openssl::md5))
+  expect_identical(
+    data_key_fingerprint(k, numeric_version("1.1.0")),
+    openssl::fingerprint(k, openssl::sha256))
+})
+
+
+test_that("schema validation - old version produces warning the first time", {
+  path <- unzip_reference("reference/1.0.0.zip")
+  path_data <- file.path(path, "data")
+  path_openssl_alice <- file.path(path, "openssl", "alice")
+
+  expect_warning(
+    data_version_read(path_data),
+    "Your cyphr schema version is out of date (found 1.0.0, current is 1.1.0)",
+    fixed = TRUE)
+  expect_silent(
+    data_version_read(path_data))
+})
+
+
+test_that("migrate", {
+  path <- unzip_reference("reference/1.0.0.zip")
+  path_data <- file.path(path, "data")
+  path_openssl_alice <- file.path(path, "openssl", "alice")
+  path_openssl_bob <- file.path(path, "openssl", "bob")
+  suppressWarnings(data_version_read(path_data))
+
+  data_request_access(path_data, "pair3")
+
+  keys_old <- data_admin_list_keys(path_data)
+  reqs_old <- data_admin_list_requests(path_data)
+
+  res <- testthat::evaluate_promise(data_schema_migrate(path_data))
+  expect_match(res$messages, "Migrating key", all = FALSE)
+  expect_match(res$messages, "Migrating request", all = FALSE)
+
+  keys_new <- data_admin_list_keys(path_data)
+  reqs_new <- data_admin_list_requests(path_data)
+
+  map <- vapply(keys_old, function(k)
+    bin2str(data_key_fingerprint(k$pub, data_schema_version()), ""), "")
+
+  expect_setequal(names(keys_new), unname(map))
+  v <- c("user", "host", "date", "pub", "key")
+  for (i in seq_along(map)) {
+    expect_equal(keys_old[[i]][v], keys_new[[map[[i]]]][v])
+  }
+
+  key1 <- data_key(path_data, path_openssl_alice)
+  key2 <- data_key(path_data, path_openssl_bob)
+  expect_identical(key1$key(), key2$key())
+
+  data_admin_list_requests(path_data)
+  data_admin_authorise(path_data, path_user = path_openssl_alice, yes = TRUE)
+  key3 <- data_key(path_data, "pair3")
+
+  expect_identical(key1$key(), key3$key())
+
+  res <- testthat::evaluate_promise(data_schema_migrate(path_data))
+  expect_match(res$messages, "Everything up to date!")
+})
+
+
+test_that("schema validation - new version errors", {
+  path <- tempfile()
+  dir.create(path, FALSE)
+  res <- data_admin_init(path, "pair1")
+  writeLines("9.9.9", data_path_version(path))
+  data_pkg_init() # clear cache
+  expect_error(
+    data_version_read(path),
+    "Upgrade to cyphr version 9.9.9 (or newer)",
+    fixed = TRUE)
+})
+
+
+test_that("new data sources do not need migrating", {
+  path <- tempfile()
+  dir.create(path, FALSE)
+  data_admin_init(path, "pair1")
+  res <- testthat::evaluate_promise(data_schema_migrate(path))
+  expect_match(res$messages, "Everything up to date!")
+})
+
+
+test_that("cache data key", {
+  path <- tempfile()
+  dir.create(path, FALSE)
+  data_admin_init(path, "pair1")
+
+  key1 <- data_key(path, "pair1")
+  key2 <- data_key(path, "pair1")
+  key3 <- data_key(path, "pair1", cache = FALSE)
+  expect_identical(key1, key2)
+  expect_false(identical(key1, key3))
 })

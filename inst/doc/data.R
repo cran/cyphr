@@ -79,12 +79,12 @@ head(cyphr::decrypt(readRDS(filename), key))
 dir(data_dir, all.files = TRUE, no.. = TRUE)
 
 ## -----------------------------------------------------------------------------
-dir(file.path(data_dir, ".cyphr"))
+dir(file.path(data_dir, ".cyphr", "keys"))
 names(cyphr::data_admin_list_keys(data_dir))
 
 ## -----------------------------------------------------------------------------
 h <- names(cyphr::data_admin_list_keys(data_dir))[[1]]
-readRDS(file.path(data_dir, ".cyphr", h))
+readRDS(file.path(data_dir, ".cyphr", "keys", h))
 
 ## -----------------------------------------------------------------------------
 h

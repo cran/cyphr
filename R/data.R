@@ -41,7 +41,9 @@
 ##' @title Encrypted data administration
 ##'
 ##' @param path_data Path to the data set.  We will store a bunch of
-##'   things in a hidden directory within this path.
+##'   things in a hidden directory within this path.  By default in
+##'   most functions we will search down the tree until we find the
+##'   .cyphr directory
 ##'
 ##' @param path_user Path to the directory with your ssh key.
 ##'   Usually this can be omitted.
@@ -86,15 +88,24 @@
 ##' unlink(path_ssh_key, recursive = TRUE)
 ##' unlink(path_data, recursive = TRUE)
 data_admin_init <- function(path_data, path_user = NULL, quiet = FALSE) {
-  pair <- data_load_keypair_user(path_user)
-
   if (!is_directory(path_data)) {
     stop("'path_data' must exist and be a directory")
   }
-  path_cyphr <- data_path_cyphr(path_data)
-  if (!data_check_path_data(path_data, fail = FALSE)) {
+
+  pair <- data_load_keypair_user(path_user)
+  found <- data_check_path_data(path_data, search = TRUE, fail = FALSE)
+
+  if (is.null(found)) {
     workflow_log(quiet, "Generating data key")
+    path_data <- I(path_data) # prevent recursion
+    path_cyphr <- data_path_cyphr(path_data)
     dir.create(path_cyphr, FALSE, TRUE)
+    on.exit(unlink(path_cyphr, recursive = TRUE), add = TRUE)
+    data_version_write(path_data)
+    version <- data_version_read(path_data)
+
+    dir.create(data_path_request(path_data), FALSE, TRUE)
+    dir.create(data_path_user_key(path_data, NULL, version), FALSE, TRUE)
 
     ## Now, the idea is to create a key for the data set:
     sym <- key_sodium(sodium::keygen())
@@ -106,8 +117,8 @@ data_admin_init <- function(path_data, path_user = NULL, quiet = FALSE) {
     encrypt_string("cyphr", sym, path_test)
     on.exit({
       workflow_log(quiet, "Removing data key")
-      file.remove(path_test)
-    })
+      suppressWarnings(file.remove(path_test))
+    }, add = TRUE)
 
     ## Just check that this all works:
     decrypt_string(path_test, sym)
@@ -120,18 +131,26 @@ data_admin_init <- function(path_data, path_user = NULL, quiet = FALSE) {
     ## But this bit is shared; we need to copy the files around a
     ## bunch.
     hash <- data_request_access(path_data, pair, quiet = TRUE)
-    on.exit(unlink(data_path_request(path_data), recursive = TRUE),
-            add = TRUE)
+    path_req <- data_path_request(path_data)
     ## NOTE: here we can't use data_admin_authorise because we can't
     ## load the symmetric key from the files we're trying to write!
-    dat <- data_pub_load(hash, data_path_request(path_data))
+    dat <- data_pub_load(hash, path_req, version)
     data_authorise_write(path_data, sym, dat, TRUE, quiet)
+
+    dir.create(data_path_template(path_data), FALSE, TRUE)
+    file_copy(cyphr_file("template/README.md"),
+              file.path(data_path_cyphr(path_data), "README.md"))
+    file_copy(cyphr_file("template/template_request"),
+              file.path(data_path_template(path_data), "request"))
+    file_copy(cyphr_file("template/template_authorise"),
+              file.path(data_path_template(path_data), "authorise"))
   } else {
-    workflow_log(quiet, "Already set up")
+    path_data <- found
+    workflow_log(quiet, paste("Already set up at", path_data))
   }
 
   workflow_log(quiet, "Verifying")
-  x <- data_key(path_data, pair, TRUE)
+  x <- data_key(path_data, pair, test = TRUE, cache = FALSE)
   on.exit() # disable possible file removals.
   invisible(x)
 }
@@ -145,9 +164,10 @@ data_admin_init <- function(path_data, path_user = NULL, quiet = FALSE) {
 ##'
 ##' @param yes Skip the confirmation prompt?  If any request is
 ##'   declined then the function will throw an error on exit.
-data_admin_authorise <- function(path_data, hash = NULL, path_user = NULL,
-                                 yes = FALSE, quiet = FALSE) {
-  data_check_path_data(path_data)
+data_admin_authorise <- function(path_data = NULL, hash = NULL,
+                                 path_user = NULL, yes = FALSE,
+                                 quiet = FALSE) {
+  path_data <- data_check_path_data(path_data, search = TRUE)
   keys <- data_load_request(path_data, hash, quiet)
   if (length(keys) == 0L) {
     workflow_log(quiet, "No keys to add")
@@ -167,15 +187,13 @@ data_admin_authorise <- function(path_data, hash = NULL, path_user = NULL,
   }
   nok <- length(keys) - nerr
   if (nok > 0) {
-    workflow_log(quiet, "Added %d key%s", nok, ngettext(nok, "", "s"))
-    if (using_git(path_data)) {
+    workflow_log(quiet, sprintf("Added %d key%s", nok, ngettext(nok, "", "s")))
+    p <- file.path(data_path_template(path_data), "authorise")
+    if (file.exists(p)) {
       users <- paste(vapply(keys, function(x) x$user, character(1)),
                      collapse = ", ")
-      msg <- c("If you are using git, you will need to commit and push:",
-               "    git add .cyphr",
-               sprintf('    git commit -m "Authorised %s"', users),
-               '    git push')
-      workflow_log(quiet, paste(msg, collapse = "\n"))
+      msg <- gsub("$USERS", users, readLines(p), fixed = TRUE)
+      workflow_log(quiet, msg)
     }
   }
   if (nerr > 0L) {
@@ -191,27 +209,34 @@ data_admin_authorise <- function(path_data, hash = NULL, path_user = NULL,
 
 ##' @export
 ##' @rdname data_admin
-data_admin_list_requests <- function(path_data) {
-  data_check_path_data(path_data)
-  data_pubs_load(data_path_request(path_data))
+data_admin_list_requests <- function(path_data = NULL) {
+  data_pubs_load(path_data, TRUE)
 }
 
 ##' @export
 ##' @rdname data_admin
-data_admin_list_keys <- function(path_data) {
-  data_check_path_data(path_data)
-  data_pubs_load(data_path_cyphr(path_data))
+data_admin_list_keys <- function(path_data = NULL) {
+  data_pubs_load(path_data, FALSE)
 }
 
 ##' User commands
 ##' @title User commands
 ##'
-##' @param path_data Path to the data
+##' @param path_data Path to the data.  If not given, then we look
+##'   recursively down below the working directory for a ".cyphr"
+##'   directory, and use that as the data directory.
 ##'
 ##' @param path_user Path to the directory with your user key.
-##'   Usually this can be omitted.  Use the \code{cyphr.user.path}
-##'   global option (i.e., via \code{options()}) to set this more
-##'   conveniently.
+##'   Usually this can be omitted.  This argument is passed in as both
+##'   \code{pub} and \code{key} to \code{\link{keypair_openssl}}.
+##'   Briefly, if this argument is not given we look at the
+##'   environment variables \code{USER_PUBKEY} and \code{USER_KEY} -
+##'   if set then these must refer to path of your public and private
+##'   keys.  If these environment variables are not set then we fall
+##'   back on \code{~/.ssh/id_rsa.pub} and \code{~/.ssh/id_rsa},
+##'   which should work in most environments.  Alternatively, provide
+##'   a path to a directory where the file \code{id_rsa.pub} and
+##'   \code{id_rsa} can be found.
 ##'
 ##' @param quiet Suppress printing of informative messages.
 ##'
@@ -249,62 +274,67 @@ data_admin_list_keys <- function(path_data) {
 ##' unlink(path_alice, recursive = TRUE)
 ##' unlink(path_bob, recursive = TRUE)
 ##' unlink(path_data, recursive = TRUE)
-data_request_access <- function(path_data, path_user = NULL, quiet = FALSE) {
+data_request_access <- function(path_data = NULL, path_user = NULL,
+                                quiet = FALSE) {
+  path_data <- data_check_path_data(path_data, search = TRUE)
+  version <- data_version_read(path_data)
   pair <- data_load_keypair_user(path_user)
-  data_check_path_data(path_data)
 
   info <- Sys.info()
   dat <- list(user = info[["user"]],
               host = info[["nodename"]],
               date = Sys.time(),
               pub = pair$pub)
-  hash <- openssl_fingerprint(pair$pub)
-  hash_str <- bin2str(hash, "")
+  hash <- data_key_fingerprint(pair$pub, version)
 
-  if (file.exists(file.path(data_path_cyphr(path_data), hash_str))) {
+  if (file.exists(data_path_user_key(path_data, hash, version))) {
     message("You appear to already have access")
     return(invisible(hash))
   }
 
   path_req <- data_path_request(path_data)
   dir.create(path_req, FALSE, TRUE)
-  dest <- file.path(path_req, hash_str)
+  dest <- file.path(path_req, bin2str(hash, ""))
   if (file.exists(dest)) {
     workflow_log(FALSE, "Request is already pending")
   } else {
     workflow_log(quiet, "A request has been added")
-    dat$signature <-
-      openssl::signature_create(data_key_prep(dat), key = pair$key())
     data_key_save(dat, dest)
   }
 
-  ## The idea here is that they will email or whatever creating a
-  ## second line of communication.  Probably this should provide a
-  ## hash of the request to the validity of the request can be
-  ## checked.  But I'm not really anticipating attacks here.
-  ##
-  ## Consider taking same approach as whoami, but falling back on
-  ## asking instead?
-  workflow_log(quiet, "Email someone with access to add you.")
-  workflow_log(quiet, paste0("\thash: ", bin2str(hash, ":")))
-  if (using_git(path_data)) {
-    msg <- c("If you are using git, you will need to commit and push first:",
-             "    git add .cyphr",
-             '    git commit -m "Please add me to the dataset"',
-             '    git push')
-    workflow_log(quiet, paste(msg, collapse = "\n"))
+  hash_str <- bin2str(hash, ":")
+  p <- file.path(data_path_template(path_data), "request")
+  if (file.exists(p)) {
+    msg <- gsub("$HASH", hash_str, readLines(p), fixed = TRUE)
+    workflow_log(quiet, msg)
   }
+
   invisible(hash)
 }
 
 ##' @export
+##'
 ##' @param test Test that the encryption is working?  (Recommended)
+##'
+##' @param cache Cache the key within the session.  This will be
+##'   useful if you are using ssh keys that have passwords, as if the
+##'   key is found within the cache, then you will not have to
+##'   re-enter your password.  Using \code{cache = FALSE} neither
+##'   looks for the key in the cache, nor saves it.
+##'
 ##' @rdname data_user
-data_key <- function(path_data, path_user = NULL, test = TRUE,
-                     quiet = FALSE) {
+data_key <- function(path_data = NULL, path_user = NULL, test = TRUE,
+                     quiet = FALSE, cache = TRUE) {
+  path_data <- data_check_path_data(path_data, search = TRUE)
+  if (cache && path_data %in% names(data_cache$keys)) {
+    return(data_cache$keys[[path_data]])
+  }
   x <- data_load_sym(path_data, path_user, quiet)
   if (test) {
     data_test(x, path_data)
+  }
+  if (cache) {
+    data_cache$keys[[path_data]] <- x
   }
   x
 }
@@ -316,7 +346,8 @@ data_key <- function(path_data, path_user = NULL, test = TRUE,
 ## overwrite without warning or notice.
 data_authorise_write <- function(path_data, sym, dat, yes = FALSE,
                                  quiet = FALSE) {
-  workflow_log(quiet, "Adding key %s", data_key_str(dat))
+  version <- data_version_read(path_data)
+  workflow_log(quiet, sprintf("Adding key %s", data_key_str(dat, version)))
   if (!(yes || prompt_confirm())) {
     msg <- paste("Cancelled adding key ", bin2str((dat$hash)))
     e <- structure(list(message = msg, call = NULL),
@@ -324,66 +355,59 @@ data_authorise_write <- function(path_data, sym, dat, yes = FALSE,
     stop(e)
   }
 
-  ## NOTE: we don't support half-pairs yet so using lower-level
-  ## functions.  However, I won't be the only person who wants this.
-  ##
-  ## We could do:
-  ##
-  ##   dat$key <- encrypt_data(sym$key(), keypair_openssl(dat$pub, FALSE))
-  ##
-  ## with the FALSE indicating that we did not want to load the private key.
-  ##
-  ## but I don't think that the complication here is worthwhile (and
-  ## it will work poorly in the case where signed encryption is used).
   dat$key <- openssl::rsa_encrypt(sym$key(), dat$pub)
 
-  hash_str <- bin2str(openssl_fingerprint(dat$pub), "")
-  data_key_save(dat, file.path(data_path_cyphr(path_data), hash_str))
+  hash <- data_key_fingerprint(dat$pub, version)
+  dest <- data_path_user_key(path_data, hash, version)
+  data_key_save(dat, dest)
   file.remove(dat$filename)
 
   invisible()
 }
 
-data_pub_load <- function(hash, path_request) {
+data_pub_load <- function(hash, path, version) {
   if (is.raw(hash)) {
     hash_str <- bin2str(hash, "")
   } else {
     hash_str <- gsub(":", "", hash)
     hash <- str2bin(hash_str)
   }
-  filename <- file.path(path_request, hash_str)
+
+  filename <- file.path(path, hash_str)
   if (!file.exists(filename)) {
-    stop(sprintf("No key '%s' found at path %s", hash_str, path_request),
+    stop(sprintf("No key '%s' found at path %s", hash_str, path),
          call. = FALSE)
   }
   dat <- readRDS(filename)
+  expected <- data_key_fingerprint(dat$pub, version)
 
-  ## Two attempts at verifying the data provided as a key to detect
-  ## tampering.
-  if (!identical(as.raw(openssl_fingerprint(dat$pub)), as.raw(hash))) {
+  if (!identical(as.raw(expected), as.raw(hash))) {
     stop("Public key hash disagrees for: ", hash_str)
   }
-
-  tryCatch(
-    openssl::signature_verify(data_key_prep(dat), dat$signature,
-                              pubkey = dat$pub),
-    error = function(e) stop("Signature of data does not match for ", hash_str))
 
   ## Save the filename so we can organise deletion later on
   dat$filename <- filename
   dat
 }
 
-data_pubs_load <- function(path) {
-  hash <- dir(path, pattern = "^[[:xdigit:]]{32}$")
-  dat <- lapply(hash, data_pub_load, path)
+data_pubs_load <- function(path_data, requests) {
+  path_data <- data_check_path_data(path_data, search = TRUE)
+  version <- data_version_read(path_data)
+  if (requests) {
+    path <- data_path_request(path_data)
+  } else {
+    path <- data_path_user_key(path_data, NULL, version)
+  }
+  hash <- dir(path, pattern = "^[[:xdigit:]]{32,}$")
+  dat <- lapply(hash, data_pub_load, path, version)
   names(dat) <- hash
   class(dat) <- "data_keys"
+  attr(dat, "version") <- version
   dat
 }
 
-data_key_str <- function(x, indent = "") {
-  hash <- bin2str(openssl_fingerprint(x$pub), ":")
+data_key_str <- function(x, version, indent = "") {
+  hash <- bin2str(data_key_fingerprint(x$pub, version), ":")
   x$date <- as.character(x$date)
   x <- unlist(x[c("user", "host", "date")])
   sprintf("%s%s\n%s", indent, hash,
@@ -396,28 +420,32 @@ print.data_keys <- function(x, ...) {
   if (length(x) == 0L) {
     cat("(empty)\n")
   } else {
+    version <- attr(x, "version", exact = TRUE)
     cat(sprintf("%d key%s:\n", length(x), ngettext(length(x), "", "s")))
-    cat(paste0(vapply(x, data_key_str, character(1), indent = "  "),
+    cat(paste0(vapply(x, data_key_str, character(1), version, indent = "  "),
                "\n", collapse = ""))
   }
   invisible(x)
 }
 
 data_load_sym <- function(path_data, path_user, quiet) {
-  data_check_path_data(path_data)
+  path_data <- data_check_path_data(path_data)
   path_cyphr <- data_path_cyphr(path_data)
   pair <- data_load_keypair_user(path_user)
-  hash_str <- bin2str(openssl_fingerprint(pair$pub), "")
-  path_data_key <- file.path(path_cyphr, hash_str)
+  version <- data_version_read(path_data)
+
+  hash <- data_key_fingerprint(pair$pub, version)
+  path_data_key <- data_path_user_key(path_data, hash, version)
   if (!file.exists(path_data_key)) {
     data_access_error(path_data, path_data_key)
   }
+
   dat <- readRDS(path_data_key)
   key_sodium(openssl::rsa_decrypt(dat$key, pair$key()))
 }
 
 data_access_error <- function(path_data, path_data_key) {
-  cmd <- call("data_request_access", path_data)
+  cmd <- call("data_request_access", as.character(path_data))
   cmd <- paste(deparse(cmd, getOption("width", 60L)), collapse = "\n")
   msg <- paste(c("Key file not found; you may not have access",
                  sprintf("(looked in %s)", path_data_key),
@@ -433,17 +461,10 @@ data_test <- function(x, path_data) {
   }
 }
 
-workflow_log <- function(quiet, ...) {
+workflow_log <- function(quiet, msg) {
   if (!quiet) {
-    message(sprintf(...))
+    message(paste(msg, collapse = "\n"))
   }
-}
-
-data_key_prep <- function(x) {
-  ## There may be other fields here; in particular "signature" (which
-  ## we do not know because it's the hash of the object) and the
-  ## private key (but I don't remember which one at this point)
-  serialize(unclass(x[c("user", "host", "date", "pub")]), NULL)
 }
 
 data_key_save <- function(x, filename) {
@@ -481,39 +502,178 @@ data_path_test <- function(path_data) {
   file.path(data_path_cyphr(path_data), "test")
 }
 
+data_path_template <- function(path_data) {
+  file.path(data_path_cyphr(path_data), "template")
+}
+
 ## A directory for data access requests
 data_path_request <- function(path_data) {
   file.path(data_path_cyphr(path_data), "requests")
 }
 
-data_check_path_data <- function(path_data, fail = TRUE) {
-  ok <- file.exists(data_path_test(path_data))
-  if (fail && !ok) {
+data_path_user_key <- function(path_data, hash, version) {
+  path <- data_path_cyphr(path_data)
+  if (version >= numeric_version("1.1.0")) {
+    path <- file.path(path, "keys")
+  }
+  if (is.null(hash)) {
+    path
+  } else {
+    file.path(path, bin2str(hash, ""))
+  }
+}
+
+data_path_version <- function(path_data) {
+  file.path(data_path_cyphr(path_data), "version")
+}
+
+data_version_write <- function(path_data) {
+  dest <- data_path_version(path_data)
+  dir.create(dirname(dest), FALSE, TRUE)
+  writeLines(as.character(data_schema_version()),
+             data_path_version(path_data))
+}
+
+data_version_read <- function(path_data) {
+  path_data <- normalizePath(path_data, mustWork = TRUE)
+  if (!exists(path_data, data_cache$versions)) {
+    p <- data_path_version(path_data)
+    if (file.exists(p)) {
+      v <- numeric_version(readLines(p))
+    } else {
+      v <- numeric_version("1.0.0")
+    }
+    cur <- data_schema_version()
+    if (v < cur) {
+      msg <- c(
+        sprintf(
+          "Your cyphr schema version is out of date (found %s, current is %s)",
+          v, cur),
+        sprintf(
+          'Please run cyphr:::data_schema_migrate("%s")',
+          path_data))
+      warning(paste(msg, collapse = "\n"), immediate. = TRUE, call. = FALSE)
+    }
+    if (v > cur) {
+      msg <- sprintf(
+        "Upgrade to cyphr version %s (or newer) to use use this directory",
+        v)
+      stop(msg, call. = FALSE)
+    }
+    data_cache$versions[[path_data]] <- v
+  }
+  data_cache$versions[[path_data]]
+}
+
+data_check_path_data <- function(path_data, fail = TRUE, search = FALSE) {
+  if (search && !inherits(path_data, "AsIs")) {
+    path_data <-
+      find_file_descend(".cyphr", path_data %||% getwd()) %||%
+      path_data %||%
+      getwd()
+  }
+  success <- file.exists(data_path_test(path_data))
+  if (!success && fail) {
     stop("cyphr not set up for ", path_data)
   }
-  invisible(ok)
+  if (success) I(path_data) else NULL
 }
 
 data_load_request <- function(path_data, hash = NULL, quiet = FALSE) {
   path_req <- data_path_request(path_data)
+  version <- data_version_read(path_data)
   if (is.null(hash)) {
-    keys <- data_admin_list_requests(path_data)
-    nk <- length(keys)
-    workflow_log(
-      quiet,
-      ngettext(nk, "There is 1 request for access",
-               sprintf("There are %d requests for access", nk)))
+    keys <- data_admin_list_requests(I(path_data))
+    n <- length(keys)
+    what <- ngettext(n, "request", "requests")
+    workflow_log(quiet, sprintf("There is %d %s for access", n, what))
   } else {
     if (is.character(hash)) {
-      keys <- lapply(hash, data_pub_load, path_req)
+      keys <- lapply(hash, data_pub_load, path_req, version)
     } else if (is.raw(hash)) {
-      keys <- list(data_pub_load(hash, path_req))
+      keys <- list(data_pub_load(hash, path_req, version))
     } else {
       stop("Invalid type for 'hash'")
     }
     names(keys) <- vapply(keys, function(x)
-      bin2str(openssl_fingerprint(x$pub), ""), character(1))
+      bin2str(data_key_fingerprint(x$pub, version), ""), character(1))
     class(keys) <- "data_keys"
+    attr(keys, "version") <- version
   }
   keys
+}
+
+
+data_key_fingerprint <- function(k, version) {
+  if (version >= numeric_version("1.1.0")) {
+    hashfun <- openssl::sha256
+  } else {
+    hashfun <- openssl::md5
+  }
+  openssl::fingerprint(k, hashfun)
+}
+
+
+data_cache <- new.env(parent = emptyenv())
+data_pkg_init <- function() {
+  rm(list = ls(data_cache, all.names = TRUE), envir = data_cache)
+  data_cache$schema_version <- numeric_version("1.1.0")
+  data_cache$versions <- list()
+  data_cache$keys <- list()
+}
+
+
+data_schema_version <- function() {
+  data_cache$schema_version
+}
+
+
+data_schema_migrate <- function(path_data) {
+  path_data <- data_check_path_data(path_data, search = TRUE)
+  version <- data_version_read(path_data)
+  cur <- data_schema_version()
+  if (cur == version) {
+    message("Everything up to date!")
+    return(invisible())
+  }
+
+  ## If we change the format again, we'll need to deal with this, but
+  ## hopefully we won't!
+  stopifnot(cur == numeric_version("1.1.0"),
+            version == numeric_version("1.0.0"))
+
+  path_keys <- data_path_user_key(path_data, NULL, cur)
+  dir.create(path_keys, FALSE, TRUE)
+
+  path_cyphr <- data_path_cyphr(path_data)
+
+  keys <- dir(path_cyphr, "^[[:xdigit:]]{32}$")
+
+  keys <- data_admin_list_keys(path_data)
+  requests <- data_admin_list_requests(path_data)
+
+  dir.create(data_path_user_key(path_data, NULL, cur), FALSE, TRUE)
+
+  for (k in keys) {
+    hash_old <- data_key_fingerprint(k$pub, version)
+    hash_new <- data_key_fingerprint(k$pub, cur)
+    message(sprintf("Migrating key %s/%s (%s)",
+                    k$user, k$host, bin2str(hash_old, "")))
+    file.rename(data_path_user_key(path_data, hash_old, version),
+                data_path_user_key(path_data, hash_new, cur))
+  }
+
+  path_req <- data_path_request(path_data)
+  for (k in requests) {
+    hash_old <- data_key_fingerprint(k$pub, version)
+    hash_new <- data_key_fingerprint(k$pub, cur)
+    message(sprintf("Migrating request %s/%s (%s)",
+                    k$user, k$host, bin2str(hash_old, "")))
+    file.rename(file.path(path_req, hash_old),
+                file.path(path_req, hash_new))
+  }
+
+  data_cache$versions[[path_data]] <- NULL
+  data_version_write(path_data)
+  invisible()
 }

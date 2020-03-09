@@ -38,8 +38,14 @@ skip_if_no_ssh_keygen <- function() {
 
 unzip_reference <- function(zip) {
   tmp <- tempfile()
-  res <- utils::unzip(zip, exdir = tmp)
+  utils::unzip(zip, exdir = tmp)
   files <- dir(tmp)
   stopifnot(length(files) == 1)
   file.path(tmp, files)
+}
+
+with_dir <- function(path, code) {
+  owd <- setwd(path)
+  on.exit(setwd(owd))
+  force(code)
 }

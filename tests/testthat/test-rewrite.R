@@ -30,7 +30,7 @@ test_that("command rewriting", {
                "Cannot infer file argument")
   expect_error(rewrite(quote(unknown("myfile"))))
   expect_error(rewrite(quote(plot("myfile"))),
-               "Rewrite rule for graphics::plot not found", fixed = TRUE)
+               "Rewrite rule for .*::plot not found")
 })
 
 test_that("filename default argument", {
@@ -67,7 +67,7 @@ test_that("namespaced functions", {
 ## This is not ideal and there may be other cases where this fails
 ## badly.
 test_that("invalid input", {
-  expect_error(rewrite(quote(1(foo))), "Confused")
+  expect_error(rewrite(quote(1 (foo))), "Confused")
   expect_error(rewrite(quote(factory()(foo))), "Invalid function call for name")
 })
 
