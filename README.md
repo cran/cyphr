@@ -2,14 +2,15 @@
 
 # cyphr
 
+<!-- badges: start -->
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Linux Build Status](https://travis-ci.org/ropensci/cyphr.svg?branch=master)](https://travis-ci.org/ropensci/cyphr)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/uqvjcxarec484st8?svg=true)](https://ci.appveyor.com/project/ropensci/cyphr)
+[![R build status](https://github.com/ropensci/cyphr/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/cyphr/actions)
 [![codecov.io](https://codecov.io/github/ropensci/cyphr/coverage.svg?branch=master)](https://codecov.io/github/ropensci/cyphr?branch=master)
 [![](https://www.r-pkg.org/badges/version/cyphr)](https://cran.r-project.org/package=cyphr)
-[![](https://badges.ropensci.org/114_status.svg)](https://github.com/ropensci/onboarding/issues/114)
+[![](https://badges.ropensci.org/114_status.svg)](https://github.com/ropensci/software-review/issues/114)
+<!-- badges: end -->
 
-High-level functions for supporting encryption and decryption of data from R.  This allows secure storage and exchange of information, while trying to keep the encryption/decryption code from taking over your analyses.  `cyphr` wraps the lower-level support from [`sodium`](https://github.com/jeroenooms/sodium) and [`openssl`](https://github.com/jeroenooms/openssl).  This package is designed to be easy to use, rather than the most secure thing (you're using R, remember - for examples of what `cyphr` can't protect against see [`jammr`](https://github.com/Ironholds/jammr), [`rpwnd`](https://github.com/hrbrmstr/rpwnd) and [`evil.R`](https://github.com/romainfrancois/evil.R).)
+High-level functions for supporting encryption and decryption of data from R.  This allows secure storage and exchange of information, while trying to keep the encryption/decryption code from taking over your analyses.  `cyphr` wraps the lower-level support from [`sodium`](https://github.com/jeroen/sodium) and [`openssl`](https://github.com/jeroen/openssl).  This package is designed to be easy to use, rather than the most secure thing (you're using R, remember - for examples of what `cyphr` can't protect against see [`jammr`](https://github.com/Ironholds/jammr), [`rpwnd`](https://github.com/hrbrmstr/rpwnd) and [`evil.R`](https://github.com/romainfrancois/evil.R).)
 
 `cyphr` provides high level functions to:
 
@@ -75,8 +76,8 @@ k
 ```
 
 ```
-##  [1] 84 83 64 a2 3c 10 e6 9f 22 8b bc cd 48 81 0f 71 a0 4b 28 57 e3 40 c4
-## [24] b7 ab 3e 00 f1 fd ff ee c8
+##  [1] 76 ac 61 ee ad df de 45 1e 27 f5 fc 74 95 2f 9a f4 66 85 f9 95 05 80 5d d9
+## [26] 75 9f bf e2 c4 da 8f
 ```
 
 With this key we can create the `key_sodium` object:
