@@ -12,7 +12,7 @@
 
 <meta name="author" content="Rich FitzJohn" />
 
-<meta name="date" content="2021-05-17" />
+<meta name="date" content="2022-06-20" />
 
 <title>Introduction</title>
 
@@ -318,7 +318,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Introduction</h1>
 <h4 class="author">Rich FitzJohn</h4>
-<h4 class="date">2021-05-17</h4>
+<h4 class="date">2022-06-20</h4>
 
 
 
@@ -349,7 +349,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">k &lt;-<span class="st"> </span>openssl<span class="op">::</span><span class="kw">aes_keygen</span>()</a></code></pre></div>
 <p>which generates a raw vector</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">k</a></code></pre></div>
-<pre><code>## aes 92:09:17:41:61:66:af:35:5b:f2:2d:20:62:5b:c3:07</code></pre>
+<pre><code>## aes 57:7f:c1:b3:ff:6e:f6:6b:87:58:b0:f1:aa:9e:d2:2b</code></pre>
 <p>(this prints nicely but it really is stored as a 16 byte raw vector).</p>
 <p>The encryption functions that this key supports are <code>openssl::aes_cbc_encrypt</code>, <code>openssl::aes_ctr_encrypt</code> and <code>openssl::aes_gcm_encrypt</code> (along with the corresponding decryption functions). The <code>cyphr</code> package tries to abstract this away by using a wrapper `cyphr::key_openssl</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">key &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">key_openssl</span>(k)</a>
@@ -402,31 +402,31 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">secret &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">encrypt_string</span>(<span class="st">&quot;secret message&quot;</span>, pair_a)</a></code></pre></div>
 <p>The secret is now just a big pile of bytes</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">secret</a></code></pre></div>
-<pre><code>##   [1] 58 0a 00 00 00 03 00 04 00 05 00 03 05 00 00 00 00 05 55 54 46 2d 38 00 00
-##  [26] 02 13 00 00 00 04 00 00 00 18 00 00 00 10 72 4f 1c 81 9d 6f ba a7 50 64 20
-##  [51] ca 57 ef c1 68 00 00 00 18 00 00 01 00 20 36 4d 02 d1 ea 7a 09 18 19 88 63
-##  [76] 0b 20 19 2c 62 eb db 36 27 7e 58 61 f3 3d 84 ef 78 fb 03 ea b6 1a fb 59 0b
-## [101] ad 5c 34 69 f3 b1 4c cc f7 e3 42 1f dd 4c 75 1d ed e0 ae c0 8f e4 29 a7 2e
-## [126] ed f5 f2 a9 7d ad 1b 2f b6 f8 d7 12 45 31 6a 98 bc 8a cf e6 df d9 74 8b 27
-## [151] 0b 2e 3e 1f 3c 57 e8 2c 07 11 e8 b7 67 7c 1c 73 e6 29 2d 93 e4 2a 8d c9 c2
-## [176] c5 c9 d4 c6 27 af a9 ea c5 03 71 96 c2 ea 92 d5 06 75 03 03 09 82 28 b8 4e
-## [201] ba d1 54 0c 29 c2 92 cc 1d 73 19 7f 32 e9 2d 12 1c f3 92 71 ec 27 09 c1 fd
-## [226] e0 92 e0 56 90 b1 af 7f 66 f8 31 1d 8c aa 9c fa d6 ac 60 d1 2b ce 5c 50 76
-## [251] fd 89 1f 4a 5a be de c1 fa 2b 5f 74 5e 79 07 74 47 5d 63 7f 56 23 24 44 06
-## [276] c3 6f ce c7 57 2d 79 15 85 1b a5 aa 6b 26 9b b4 58 ee 0b 94 29 9d 62 ed 65
-## [301] 27 8e 9b b1 8b 44 07 f4 4f b0 35 63 72 eb d7 c6 38 c7 15 00 00 00 18 00 00
-## [326] 00 10 48 ab 14 fb 07 82 5d 11 89 8d 21 d3 80 90 a0 c3 00 00 00 18 00 00 01
-## [351] 00 54 d8 1d b9 c2 8c 85 15 04 f6 3a 89 75 34 1a 88 d2 dd ea ec 40 30 33 5f
-## [376] 28 74 cc 2d 5e cd 83 90 05 1f 2b 8c b4 5d bc 9c 23 ca 56 d7 c6 f7 ce 4d 69
-## [401] ef f2 19 4e fa 03 39 54 1f 0b 23 77 bd 26 79 82 63 87 1a 24 4e 1d 96 57 e4
-## [426] 7f 7d 17 20 fe 49 8f 4d 98 72 e2 91 be 87 47 06 a6 56 0e a2 f1 18 e9 ab 10
-## [451] cd d3 fb 7a 7c b7 1e 71 09 62 49 64 67 e4 3d 8a 29 c7 76 cc ff 2e 14 15 69
-## [476] 06 af 74 9e 54 7d b5 3e 0e f4 c7 69 b7 fd 4c aa 06 af c9 ea 3f 01 99 23 48
-## [501] 72 52 0c f4 a8 62 e2 12 5e fb bb 0b 3d 48 fe c3 a7 1f 06 5d ed dc 6d 0c 33
-## [526] e5 c7 2e 6d eb 3d ce fb bb 6d 1b fd f9 ee 4b 0a 60 d0 9d 69 40 55 a4 55 95
-## [551] 58 17 a3 1e 73 b7 d1 bd fc 52 b6 6f 7b 14 a5 3d 1e 4e 18 8d 34 ca 50 47 15
-## [576] 7b 73 61 38 64 d5 d6 23 6c 8a d8 b2 18 46 1f 33 f9 25 82 f4 17 e2 34 9a c8
-## [601] 84 c6 2e bf 37 8e 8e 00 00 04 02 00 00 00 01 00 04 00 09 00 00 00 05 6e 61
+<pre><code>##   [1] 58 0a 00 00 00 03 00 04 02 00 00 03 05 00 00 00 00 05 55 54 46 2d 38 00 00
+##  [26] 02 13 00 00 00 04 00 00 00 18 00 00 00 10 d9 c6 b7 e2 1c fd cc a9 39 a6 5e
+##  [51] 6e 4f 12 5a 8b 00 00 00 18 00 00 01 00 09 20 72 03 ec 7f af 0f d7 da 84 f8
+##  [76] 3f 0f f9 3f 28 02 2f ee 47 c1 c7 55 ac 15 93 9f 1e da 56 e1 d7 80 8b 0c e0
+## [101] d8 a3 84 32 24 3c 0c b3 db 5a 58 c5 56 2a da 2c 72 77 cd 9d 2f fe 20 a8 7e
+## [126] e7 2c 7a ce 72 57 74 01 91 3e 6e ff 39 d8 96 67 61 9c cb f8 e4 08 c6 42 c7
+## [151] d7 90 6f ae 0a b0 56 43 c2 ff 4d e4 99 e6 79 d7 54 89 da 31 65 85 a5 68 64
+## [176] 6d 2d dc 51 48 9b 22 6c ba 45 1d 0d 23 53 43 20 98 27 20 fb b0 b2 74 e5 a5
+## [201] 1e b6 05 62 e2 7d 26 73 2c 18 a2 38 c3 2f 79 ca e0 5f a4 67 31 cd fa e9 89
+## [226] 6f ea 53 4d 7a a3 9f f3 e1 eb fc 7f d0 a1 89 86 2e 55 23 97 25 06 a0 76 f6
+## [251] 8e f9 92 db 55 9d 13 ef b5 5c e0 98 13 19 39 f0 69 b9 69 6a b8 37 f3 0a 41
+## [276] 7a da 26 8c 08 52 e5 38 73 4a af d6 e7 b8 1d f8 8e 66 ea 81 9b f4 8f d9 77
+## [301] e3 9a 91 e4 f4 55 76 ef 9d 1f 44 ce c9 5b 64 aa 64 69 8a 00 00 00 18 00 00
+## [326] 00 10 35 d6 e7 16 0c c2 56 9e 8c 27 b7 49 f2 0d b1 9e 00 00 00 18 00 00 01
+## [351] 00 61 c8 95 d3 26 68 1a d0 26 34 bf 14 5e 47 af c2 49 08 b6 77 69 31 26 53
+## [376] c9 03 e8 dd 30 a4 f7 20 c5 fc 2d c0 7e cb 4d f5 30 44 0e 65 6d 22 4b 06 4a
+## [401] 88 58 e9 2f ca 57 bc 22 dc 30 b9 9c a6 cc 68 82 c1 3a 03 2a 36 8f f6 da 15
+## [426] ed 61 c9 07 3c e6 52 84 29 2e 03 32 c4 53 11 ed 94 a4 11 6c 0c 4c 97 84 63
+## [451] 76 b4 81 c4 42 4a d8 b3 46 cf f6 07 eb 5c 5d a5 b8 28 59 91 1a 32 4d a0 a9
+## [476] 33 81 7e 17 83 73 b4 44 eb 8c b8 52 ff eb 68 f5 b0 cb c2 db 40 43 e2 5b b1
+## [501] 64 16 c6 af bb a6 4c 53 03 ff 0c 0a 92 37 f2 a8 48 14 2c a4 f7 4a 48 0a 2a
+## [526] bb e2 0e 03 2e fd ad ab b3 2a 92 98 ca c6 d0 c8 0e a9 21 e0 4f d9 34 f5 0b
+## [551] 16 ec 90 f5 ed ba ed 07 93 a3 3f 7b 3b 92 85 2d e7 a7 10 f9 da de 61 53 bd
+## [576] 6b ce 24 83 a3 29 76 f3 78 b6 0e 6b a0 2e 92 8b fe 22 03 9c 7b 5b a8 d6 1b
+## [601] 52 92 29 36 b2 3d 02 00 00 04 02 00 00 00 01 00 04 00 09 00 00 00 05 6e 61
 ## [626] 6d 65 73 00 00 00 10 00 00 00 04 00 04 00 09 00 00 00 02 69 76 00 04 00 09
 ## [651] 00 00 00 07 73 65 73 73 69 6f 6e 00 04 00 09 00 00 00 04 64 61 74 61 00 04
 ## [676] 00 09 00 00 00 09 73 69 67 6e 61 74 75 72 65 00 00 00 fe</code></pre>
@@ -441,31 +441,31 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>And send one back of his own:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">secret2 &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">encrypt_string</span>(<span class="st">&quot;another message&quot;</span>, pair_b)</a>
 <a class="sourceLine" id="cb27-2" title="2">secret2</a></code></pre></div>
-<pre><code>##   [1] 58 0a 00 00 00 03 00 04 00 05 00 03 05 00 00 00 00 05 55 54 46 2d 38 00 00
-##  [26] 02 13 00 00 00 04 00 00 00 18 00 00 00 10 b2 c3 3a 71 f3 1a 0a 6f 48 00 96
-##  [51] ba c4 66 20 24 00 00 00 18 00 00 01 00 01 cb 90 5f 2c 15 5c 74 15 db 04 6d
-##  [76] 28 ce 36 06 0a 44 3b ce 3e 41 22 27 20 a8 98 c3 d6 76 8a d8 ff ef fe c7 19
-## [101] 66 49 2f 86 bb 05 27 4d c7 f3 31 b6 17 31 fe c4 38 60 9e c9 f5 b3 4b 48 25
-## [126] e5 51 ed 81 0e 3a 3a 71 53 e2 2c 19 c6 e3 f4 6f e2 3b 6d f1 d5 0e 51 00 ee
-## [151] 82 47 20 d7 33 56 e0 40 f5 56 aa 70 89 e7 5f d4 65 b6 0e 0a d3 ac 36 b0 ad
-## [176] d4 ac 4e 3c 0a 9d 03 16 f1 76 60 07 27 59 42 5f b6 01 cd e6 ef 3e a1 9e 44
-## [201] 1c e5 2e 38 75 da 1b d5 bf 1c 56 56 ab 58 ed 10 ae 21 10 3b 16 1a d1 5f f3
-## [226] ea 92 e4 90 01 53 77 50 73 26 5a 4f 77 27 af 0e f1 9b 9d 76 71 0a de 65 41
-## [251] 16 5c b1 2f 0a 81 8d bc 4c a5 d5 df 81 5b 6f df b5 9e eb 2f 22 f1 e1 e5 20
-## [276] 96 d4 54 48 6e ef f0 de 2e 9e 08 65 d8 9b 88 a2 47 1e e1 9e a2 48 2c c9 f6
-## [301] 65 2b 99 32 08 13 71 2c d1 a0 32 77 46 3b d0 c1 03 cc 70 00 00 00 18 00 00
-## [326] 00 10 8e 5d e7 6c e8 ea 8b 30 4a c9 1a b3 90 b6 d0 e7 00 00 00 18 00 00 01
-## [351] 00 9c e2 8d 2d b2 63 f2 ab 46 df 9f 2f f3 92 2c 08 f0 55 43 dc 53 4e 0e ad
-## [376] 1d 55 87 1f 4b 92 62 42 8a 45 75 ff 6d 0b 40 1e 21 c7 6b 52 4a ac a5 1c 84
-## [401] 6a 57 46 4f 49 ec f9 bf f9 f5 6e 7f 82 8f d6 c4 a3 c5 a3 02 1a 9f 8f 27 75
-## [426] 8e a6 7f b1 d5 b8 f2 da f9 3f f8 ef 71 47 c9 6d b9 b9 52 0c 61 3a 6f ec c0
-## [451] 57 85 a0 f7 11 4c de db fd 08 e7 5e c5 30 04 3b 7c 9a 17 b0 7f 6f 9d 97 37
-## [476] 14 50 0b 68 51 d4 18 84 60 92 59 81 d4 4b 05 0f d3 3f 80 21 6d ef 92 a9 bf
-## [501] 0c 55 34 1b 39 ee 4b 64 2e ad 8e 66 d0 ce 32 09 16 b0 ab 0c a9 61 14 2d 85
-## [526] a2 c1 22 e0 cc 53 29 f4 bb 9b b2 03 a7 52 4f 4f 32 2f 18 a8 b8 cd 01 5a a7
-## [551] 02 4d 1d 56 67 b4 d4 84 7a 6e 08 15 e7 0f b7 86 8b d7 79 ec d2 f4 12 ba 7e
-## [576] bf a7 58 2f 23 e3 d9 06 76 9f 78 d1 09 92 a9 65 23 8c 7d c0 e1 4a 2b 8c 6c
-## [601] 87 b9 07 e2 fd 8b 8f 00 00 04 02 00 00 00 01 00 04 00 09 00 00 00 05 6e 61
+<pre><code>##   [1] 58 0a 00 00 00 03 00 04 02 00 00 03 05 00 00 00 00 05 55 54 46 2d 38 00 00
+##  [26] 02 13 00 00 00 04 00 00 00 18 00 00 00 10 11 1e 33 d4 55 eb 64 4f f2 37 70
+##  [51] f2 21 1e b3 89 00 00 00 18 00 00 01 00 0a d8 a4 1d 8e 97 17 44 6a 0a 5b 34
+##  [76] e6 5d 5a 6f 4d 9b af 56 2e c0 50 35 91 78 8d 8c 68 21 b4 6b 37 53 0d 02 58
+## [101] 8a 8d d3 53 7f 51 e3 4b b3 87 b9 ad 0f 80 39 2e 78 5c 4f f5 0f 71 82 f8 ea
+## [126] bb a6 9d 6f 39 75 4b 2b af e1 4a 97 ba ca 3d 01 78 ac d8 13 8e 17 b5 a6 ae
+## [151] b7 70 81 ba 45 58 9e fd ce 31 23 50 f5 93 33 bf 88 02 3d 3d f0 9f 3f f4 3f
+## [176] 6f fe 37 50 40 8f 9b 5f 05 c6 c7 a7 a9 1a 63 da 66 f9 06 25 11 c4 9a 3d 74
+## [201] d5 68 b0 d3 d6 6a 30 d0 71 07 91 0e ab c4 72 37 c1 84 0d 80 2c fe 8d 79 99
+## [226] b0 b0 1f ff 0a 49 8b c1 87 31 d0 cf 9c e7 3f 6e 68 ab 00 a1 53 1e c3 c5 60
+## [251] 83 7b 09 ef d5 9b 93 c0 6d 53 b2 41 e6 4f 10 35 78 c5 8a ef de 67 61 26 6b
+## [276] 49 e3 58 9a 2e 0f a2 42 32 3c 3f 77 40 87 00 d2 af 95 57 a2 14 10 46 90 e0
+## [301] c0 92 03 97 79 ce a2 1b d7 1e 8f 8a b2 f6 88 7d 65 fa be 00 00 00 18 00 00
+## [326] 00 10 01 d4 f0 ad c6 0b fa 0b 5a 72 80 91 89 7e 3c b9 00 00 00 18 00 00 01
+## [351] 00 68 fc c4 6f 51 60 d1 a8 80 ec 2d 14 87 51 5b 2f 6a 14 fd be 45 bf bd df
+## [376] b7 af 92 9a 53 72 ac 65 df 38 ab c1 13 ee d1 e3 33 9a 72 06 ba 46 01 fa 4e
+## [401] fc 90 fe 78 51 53 8c 30 1b 5a 98 7e ee 96 ae 4d 0c d6 9f 32 ba 37 8b f3 c9
+## [426] 97 e4 18 c5 c4 4d e9 db 4d 2d d1 ac dc 44 ac f6 99 8b 29 31 c3 1b 85 01 f3
+## [451] 0c ce 8b c6 65 a7 81 a8 0b 2d 68 37 e4 e8 06 51 32 63 03 04 4f ce d2 9f 20
+## [476] 8d c7 27 5e a2 85 33 62 7c 9d 65 a4 d8 f2 ee 1a 7e 6d ec cf 27 3a bc 13 e3
+## [501] 4e bb 0b 99 0f 81 a7 ee 55 f8 df f9 5c 9e 6f 39 8e d2 d4 3f 01 c4 a3 44 b6
+## [526] 92 ea 15 fc 5b a5 04 85 20 b6 97 b4 91 c7 48 e2 cf 5f 45 98 4d 73 ec d5 00
+## [551] 10 cc 47 6b c0 b3 72 cb 11 f4 b6 02 47 56 a5 c3 12 14 c4 7d 48 d1 a0 1f d2
+## [576] 59 99 1d fd 37 4e 40 6e 9d 0e b5 c0 2f b4 4b a6 bb e5 cd ff 67 ce eb a4 d0
+## [601] a6 d5 92 fa de 38 14 00 00 04 02 00 00 00 01 00 04 00 09 00 00 00 05 6e 61
 ## [626] 6d 65 73 00 00 00 10 00 00 00 04 00 04 00 09 00 00 00 02 69 76 00 04 00 09
 ## [651] 00 00 00 07 73 65 73 73 69 6f 6e 00 04 00 09 00 00 00 04 64 61 74 61 00 04
 ## [676] 00 09 00 00 00 09 73 69 67 6e 61 74 75 72 65 00 00 00 fe</code></pre>
@@ -486,14 +486,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>As an alternative, you can “base64 encode” the bytes into something that you can just email around:</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">secret_base64 &lt;-<span class="st"> </span>openssl<span class="op">::</span><span class="kw">base64_encode</span>(secret)</a>
 <a class="sourceLine" id="cb35-2" title="2">secret_base64</a></code></pre></div>
-<pre><code>## [1] &quot;WAoAAAADAAQABQADBQAAAAAFVVRGLTgAAAITAAAABAAAABgAAAAQOWanYMPpixlX3lVur9PA5AAAABgAAAEAFnfYPaZNiyuahIGW/sELsPnf07Py21k2RMQDVWcF6tJxFFwgwF5yhD+w/iR1fz/SrUJ5c22jOzzHfEwZgfEhiPTlPF4YQqRawGko2uLPI8R/wqiOnxaiyETJLyNiTdS1r5HdxWHjgPaEshf+mh6ONCJzT/IlY/Zxwjuv4/iSgaXDoSad+CMjKZdkyebfSu9SMbXRz9dEw3c6kIdPHShZS3vNizDydjX5jCnKtrc5MVYgAck0D30NRmvS/2J+p6YeUtVKtCezo4+n281000d+5nTRR2stim7G/fTgNuGIUmGbuA/CnHTOQ3iSPOUIL0G19ITQLwjhmqasDrP1zfTYaAAAABgAAAAQFhQL0pNm859jgnLbNLUNLQAAABgAAAEAVNgducKMhRUE9jqJdTQaiNLd6uxAMDNfKHTMLV7Ng5AFHyuMtF28nCPKVtfG985Nae/yGU76AzlUHwsjd70meYJjhxokTh2WV+R/fRcg/kmPTZhy4pG+h0cGplYOovEY6asQzdP7eny3HnEJYklkZ+Q9iinHdsz/LhQVaQavdJ5UfbU+DvTHabf9TKoGr8nqPwGZI0hyUgz0qGLiEl77uws9SP7Dpx8GXe3cbQwz5ccubes9zvu7bRv9+e5LCmDQnWlAVaRVlVgXox5zt9G9/FK2b3sUpT0eThiNNMpQRxV7c2E4ZNXWI2yK2LIYRh8z+SWC9BfiNJrIhMYuvzeOjgAABAIAAAABAAQACQAAAAVuYW1lcwAAABAAAAAEAAQACQAAAAJpdgAEAAkAAAAHc2Vzc2lvbgAEAAkAAAAEZGF0YQAEAAkAAAAJc2lnbmF0dXJlAAAA/g==&quot;</code></pre>
+<pre><code>## [1] &quot;WAoAAAADAAQCAAADBQAAAAAFVVRGLTgAAAITAAAABAAAABgAAAAQbnWrl0FWC7cjNZLqVPU8HQAAABgAAAEAG+iC89U7rCkkYXwYESxO24ziH6npKMhTTVpK54EGI/tODo8ep3geunw5dRq5llXFkcO1PrS3rLQ+l3tZblCdMEoi24+QXEfryqS2mG9MjPJnAYJTgJF4mdUP9NHrxD7a/N4UIEpfaTbxM5OEdcDS/wQluJbASimOMtf+RM9CPucIbxBxJ1Dk0qCi0J/Wkx7pfrHL1JuqiZxQn0gpillH6cpHwhPOlzYj4+EPiz9AYi+IuWMZIlk9zlroBUoJ3asjo99Qvu9pZtfIWHcIudauZ24+uJX6fb3z+bmltYGt6k3JkQFLQQcoG2ZGecbyfbGvR4ckJUNSygFBkovpJc7L1AAAABgAAAAQtZi2LW9719NMr+E7SeVpYAAAABgAAAEAYciV0yZoGtAmNL8UXkevwkkItndpMSZTyQPo3TCk9yDF/C3AfstN9TBEDmVtIksGSohY6S/KV7wi3DC5nKbMaILBOgMqNo/22hXtYckHPOZShCkuAzLEUxHtlKQRbAxMl4RjdrSBxEJK2LNGz/YH61xdpbgoWZEaMk2gqTOBfheDc7RE64y4Uv/raPWwy8LbQEPiW7FkFsavu6ZMUwP/DAqSN/KoSBQspPdKSAoqu+IOAy79rauzKpKYysbQyA6pIeBP2TT1CxbskPXtuu0Hk6M/ezuShS3npxD52t5hU71rziSDoyl283i2DmugLpKL/iIDnHtbqNYbUpIpNrI9AgAABAIAAAABAAQACQAAAAVuYW1lcwAAABAAAAAEAAQACQAAAAJpdgAEAAkAAAAHc2Vzc2lvbgAEAAkAAAAEZGF0YQAEAAkAAAAJc2lnbmF0dXJlAAAA/g==&quot;</code></pre>
 <p>This can be converted back with <code>openssl::base64_decode</code>:</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1"><span class="kw">identical</span>(openssl<span class="op">::</span><span class="kw">base64_decode</span>(secret_base64), secret)</a></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>Or, less compactly but also suitable for email, you might just convert the bytes into their hex representation:</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1">secret_hex &lt;-<span class="st"> </span>sodium<span class="op">::</span><span class="kw">bin2hex</span>(secret)</a>
 <a class="sourceLine" id="cb39-2" title="2">secret_hex</a></code></pre></div>
-<pre><code>## [1] &quot;580a000000030004000500030500000000055554462d38000002130000000400000018000000103966a760c3e98b1957de556eafd3c0e400000018000001001677d83da64d8b2b9a848196fec10bb0f9dfd3b3f2db593644c403556705ead271145c20c05e72843fb0fe24757f3fd2ad4279736da33b3cc77c4c1981f12188f4e53c5e1842a45ac06928dae2cf23c47fc2a88e9f16a2c844c92f23624dd4b5af91ddc561e380f684b217fe9a1e8e3422734ff22563f671c23bafe3f89281a5c3a1269df82323299764c9e6df4aef5231b5d1cfd744c3773a90874f1d28594b7bcd8b30f27635f98c29cab6b73931562001c9340f7d0d466bd2ff627ea7a61e52d54ab427b3a38fa7dbcd74d3477ee674d1476b2d8a6ec6fdf4e036e18852619bb80fc29c74ce4378923ce5082f41b5f484d02f08e19aa6ac0eb3f5cdf4d868000000180000001016140bd29366f39f638272db34b50d2d000000180000010054d81db9c28c851504f63a8975341a88d2ddeaec4030335f2874cc2d5ecd8390051f2b8cb45dbc9c23ca56d7c6f7ce4d69eff2194efa0339541f0b2377bd26798263871a244e1d9657e47f7d1720fe498f4d9872e291be874706a6560ea2f118e9ab10cdd3fb7a7cb71e710962496467e43d8a29c776ccff2e14156906af749e547db53e0ef4c769b7fd4caa06afc9ea3f0199234872520cf4a862e2125efbbb0b3d48fec3a71f065deddc6d0c33e5c72e6deb3dcefbbb6d1bfdf9ee4b0a60d09d694055a455955817a31e73b7d1bdfc52b66f7b14a53d1e4e188d34ca5047157b73613864d5d6236c8ad8b218461f33f92582f417e2349ac884c62ebf378e8e000004020000000100040009000000056e616d6573000000100000000400040009000000026976000400090000000773657373696f6e00040009000000046461746100040009000000097369676e6174757265000000fe&quot;</code></pre>
+<pre><code>## [1] &quot;580a000000030004020000030500000000055554462d38000002130000000400000018000000106e75ab9741560bb7233592ea54f53c1d00000018000001001be882f3d53bac2924617c18112c4edb8ce21fa9e928c8534d5a4ae7810623fb4e0e8f1ea7781eba7c39751ab99655c591c3b53eb4b7acb43e977b596e509d304a22db8f905c47ebcaa4b6986f4c8cf26701825380917899d50ff4d1ebc43edafcde14204a5f6936f133938475c0d2ff0425b896c04a298e32d7fe44cf423ee7086f10712750e4d2a0a2d09fd6931ee97eb1cbd49baa899c509f48298a5947e9ca47c213ce973623e3e10f8b3f40622f88b9631922593dce5ae8054a09ddab23a3df50beef6966d7c8587708b9d6ae676e3eb895fa7dbdf3f9b9a5b581adea4dc991014b4107281b664679c6f27db1af478724254352ca0141928be925cecbd40000001800000010b598b62d6f7bd7d34cafe13b49e56960000000180000010061c895d326681ad02634bf145e47afc24908b67769312653c903e8dd30a4f720c5fc2dc07ecb4df530440e656d224b064a8858e92fca57bc22dc30b99ca6cc6882c13a032a368ff6da15ed61c9073ce65284292e0332c45311ed94a4116c0c4c97846376b481c4424ad8b346cff607eb5c5da5b82859911a324da0a933817e178373b444eb8cb852ffeb68f5b0cbc2db4043e25bb16416c6afbba64c5303ff0c0a9237f2a848142ca4f74a480a2abbe20e032efdadabb32a9298cac6d0c80ea921e04fd934f50b16ec90f5edbaed0793a33f7b3b92852de7a710f9dade6153bd6bce2483a32976f378b60e6ba02e928bfe22039c7b5ba8d61b52922936b23d02000004020000000100040009000000056e616d6573000000100000000400040009000000026976000400090000000773657373696f6e00040009000000046461746100040009000000097369676e6174757265000000fe&quot;</code></pre>
 <p>and the reverse with <code>sodium::hex2bin</code>:</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="kw">identical</span>(sodium<span class="op">::</span><span class="kw">hex2bin</span>(secret_hex), secret)</a></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
@@ -527,9 +527,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>As above, she can now send a message:</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1">secret &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">encrypt_string</span>(<span class="st">&quot;secret message&quot;</span>, pair_a)</a>
 <a class="sourceLine" id="cb48-2" title="2">secret</a></code></pre></div>
-<pre><code>##  [1] 36 e9 82 69 41 97 55 25 c9 b5 67 a2 19 ab a9 51 0f 5e da a2 8e 3f 70 d8 e3
-## [26] c6 f3 e8 85 57 db 0c cf 11 36 c5 7b 67 ef 5e 36 b9 97 49 b8 0c 56 ed d8 cf
-## [51] 78 dd 4a 19</code></pre>
+<pre><code>##  [1] 9f 81 d4 8f 13 a2 b6 d9 15 72 97 27 44 da 2f a3 da 2b 38 ad a9 58 93 99 4c
+## [26] b2 fc cb 11 56 39 73 bb 60 63 98 28 75 7f 23 d9 08 9e 56 c5 2e 5e 08 c3 54
+## [51] 13 e7 19 84</code></pre>
 <p>Note how this line is identical to the one in the <code>openssl</code> section.</p>
 <p>To decrypt this message, Bob would use Alice’s public key and his private key:</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1">pair_b &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">keypair_sodium</span>(pub_a, key_b)</a>
@@ -557,17 +557,17 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>This creates a bunch of raw bytes corresponding to the data (it’s not really possible to print this as anything nicer than bytes).</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1">secret &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">encrypt_object</span>(obj, key)</a>
 <a class="sourceLine" id="cb54-2" title="2">secret</a></code></pre></div>
-<pre><code>##   [1] ed e7 79 76 08 30 54 92 84 7e 60 84 31 2c 72 45 1a df ec 93 00 b3 b2 59 f0
-##  [26] 6a ca 2e 85 0f 56 21 ac e1 11 74 d3 91 c5 a6 68 4b 6e f6 d1 5b 50 75 93 d2
-##  [51] 4d fb 2e 9a 9b 44 de a5 a6 f9 7a 72 9b c0 86 19 50 cf cc 62 29 19 03 ba 8b
-##  [76] f5 9b bb b8 49 40 69 a4 b6 9f 9b 93 ca c1 b4 ad 30 6c 05 60 40 2c 9d 6a f2
-## [101] 87 24 0e 6e 3d f4 ad ae c0 a2 d9 f6 52 b7 80 8d 6b d4 9a 9d ce 83 63 80 b8
-## [126] c6 b2 ae a5 72 92 a0 73 ae fc d3 d5 51 15 bf 12 00 16 8e 95 08 0c 97 ff a4
-## [151] 34 3a b5 11 21 b8 af 2c 36 0c 92 c7 81 47 1b 9a a9 d4 1b 46 81 96 85 20 7f
-## [176] c2 3a 03 83 17 eb 63 4e 50 73 c0 03 83 6d ec a3 f1 e4 71 62 f6 e6 55 7c 20
-## [201] aa 9f b8 f1 e6 fb d8 7d 3c d2 01 19 28 e6 e0 63 93 28 f1 83 c5 23 ed 8a d2
-## [226] bb 41 10 be 77 51 b1 ff 60 d6 2c 59 39 4f 5c 37 bd e2 df ef 57 74 87 c7 06
-## [251] fa 95 b6 c0</code></pre>
+<pre><code>##   [1] c7 38 50 bf 70 d5 0d 0d 00 f3 e6 05 64 0a 3f a2 88 57 9b 3a 02 f6 e2 5e 10
+##  [26] dc 45 37 ef 09 50 d6 64 5d 93 9d f2 0a 72 8e a9 24 85 c4 67 62 3e c7 ab 60
+##  [51] e8 d1 d5 c0 50 00 f0 30 53 ff da 09 51 c9 86 60 5b 8a e5 89 fc ff 7e 1a 8a
+##  [76] 00 90 f7 c4 d6 98 80 a6 47 91 63 c5 67 c6 6d 4f 6a 66 61 0a c5 dc 76 5f c0
+## [101] 15 32 8c 0e 57 ac ef 3c bf 25 99 1e fa 4b 96 ea 71 d8 6d 15 c2 82 e5 fe ef
+## [126] f6 b7 ee 31 2a de a9 e2 3b f8 ba ca 3b 74 3c 4a 1a a0 2a 09 e5 35 f1 f0 c8
+## [151] 4c d4 e9 2c ca 50 39 6a ef 99 1d 8f 4d e9 4d ad 52 c6 f7 c5 86 53 e5 12 e9
+## [176] e1 b9 b4 51 df 85 3f d1 79 a5 0f 4b 43 9f 16 d2 8d 2e dc 48 de 2c 08 5b 41
+## [201] cf bf de 88 39 13 c9 f2 78 b5 ef 2b a9 87 63 12 1d fd e1 fe 19 eb a8 13 c4
+## [226] 1f 1d 07 05 a4 86 7a 82 0d 37 43 7d e8 db fb b2 a0 70 dc 92 e4 0e a2 10 18
+## [251] 9a f2 3b d9</code></pre>
 <p>The data can be decrypted with the <code>decrypt_object</code> function:</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">cyphr<span class="op">::</span><span class="kw">decrypt_object</span>(secret, key)</a></code></pre></div>
 <pre><code>## $x
@@ -597,8 +597,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>For the case of strings we can do this in a slightly more lightweight way (the above function routes through <code>serialize</code> / <code>deserialize</code> which can be slow and will create larger objects than using <code>charToRaw</code> / <code>rawToChar</code>)</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" title="1">secret &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">encrypt_string</span>(<span class="st">&quot;secret&quot;</span>, key)</a>
 <a class="sourceLine" id="cb65-2" title="2">secret</a></code></pre></div>
-<pre><code>##  [1] e6 9b b4 44 fd a9 cf 6c 00 c1 49 a2 fd 1a 31 60 42 23 5c 0f c0 85 3c 35 87
-## [26] 19 60 61 65 03 05 39 ba 9f 5e ce 85 41 3d 5c bd d6 04 bd d0 30</code></pre>
+<pre><code>##  [1] 62 72 48 a3 50 dd c1 25 5a b1 ff 87 4b e7 3e 0f f2 d6 b1 53 6f 41 c4 66 41
+## [26] d7 ae 30 e7 c5 7a 15 2a 92 90 fe dc 91 bf 48 5b 61 6e 21 96 88</code></pre>
 <p>and decrypt:</p>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1">cyphr<span class="op">::</span><span class="kw">decrypt_string</span>(secret, key)</a></code></pre></div>
 <pre><code>## [1] &quot;secret&quot;</code></pre>
@@ -608,18 +608,18 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>If these are not enough for you, you can work directly with raw objects (bunches of bytes) by using <code>encrypt_data</code>:</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1">dat &lt;-<span class="st"> </span>sodium<span class="op">::</span><span class="kw">random</span>(<span class="dv">100</span>)</a>
 <a class="sourceLine" id="cb69-2" title="2">dat <span class="co"># some random bytes</span></a></code></pre></div>
-<pre><code>##   [1] 70 06 a8 21 e0 7f ce e3 a3 f8 af 4c 23 53 c2 4f 43 c1 ca a8 6c 2c bd 3f e7
-##  [26] 0f 9a 28 d2 c8 68 02 c1 8c c1 63 a7 b7 0d 5b cc bc ed 3d 0d b1 de 31 56 41
-##  [51] fa d0 f7 43 e0 2f 4c 3b 6c ec 9d a7 d3 56 20 fe be 65 57 ab 8e cd c7 5c a2
-##  [76] da be d4 60 7c 86 91 2a 16 96 41 7f 40 f1 87 82 68 f2 83 a4 d2 df 8d 9f da</code></pre>
+<pre><code>##   [1] 47 eb 86 31 2e 60 2c 4d df e7 d6 d4 a5 69 71 43 85 98 6a d9 7a 32 d1 37 6e
+##  [26] 5f 31 57 6b 04 18 3f 7d 72 e5 64 00 49 64 0c 98 a2 ba 58 a2 30 40 00 91 db
+##  [51] 2a 8c 49 2b bb 44 16 0b fe 82 06 06 ed 8e f4 73 2b ac ef aa cc 99 c9 fa d5
+##  [76] 70 56 66 31 ba 68 50 b1 f2 24 0e a8 88 e6 c7 15 eb 70 b4 f1 6b 14 4f 00 27</code></pre>
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" title="1">secret &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">encrypt_data</span>(dat, key)</a>
 <a class="sourceLine" id="cb71-2" title="2">secret</a></code></pre></div>
-<pre><code>##   [1] 9b 84 82 80 ba 0c e6 72 5d 46 3a c2 97 1a b2 0d b8 a0 68 9c 6a 16 18 53 07
-##  [26] f3 07 e2 08 55 a7 f7 16 1f 21 79 3e a0 2b 96 31 6e 3a 2d 2a fe 61 0e ab 54
-##  [51] 31 20 a2 c7 b2 58 4d fb d2 1e 90 2f a9 fe 94 1c d1 bd 01 b1 c9 94 38 52 c1
-##  [76] ef f8 c2 b9 aa ff 9a 62 55 1d ba 9f b5 65 35 5b cd 96 7a 63 d2 b2 97 5d e3
-## [101] b5 d5 f0 11 98 2f ed 53 ab 25 5d 85 02 77 d5 a9 c2 92 d9 d6 34 43 30 b9 64
-## [126] ae e1 26 ea 86 58 67 f5 b6 94 31 4e ba 8b d5</code></pre>
+<pre><code>##   [1] 36 86 ec d6 b4 1b 38 ec b7 9a 0c b6 aa 2d 09 c1 8d ae ce a7 13 c3 08 7f 54
+##  [26] e9 58 0d 26 37 47 c2 45 38 d1 82 6a 29 66 9a cf 41 46 fc b9 f9 13 c0 d2 9b
+##  [51] ac d4 14 25 11 f8 3a 76 47 b7 d7 97 83 37 a4 47 7a c0 49 55 12 7c 17 24 1c
+##  [76] 84 cb a1 72 e3 89 3a f3 e4 5d 80 b3 6c 4f 3c ad 15 fe 70 99 93 ac d1 7b af
+## [101] fd 83 97 4f c6 b7 e5 d1 a9 fb f9 28 67 7f 09 ce c4 6e d5 ce 08 be 6e 43 12
+## [126] 10 3b db 14 a0 f5 e7 42 2f 8b 4d 9c 32 c3 31</code></pre>
 <p>Decrypted data is the same as a the original data</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" title="1"><span class="kw">identical</span>(cyphr<span class="op">::</span><span class="kw">decrypt_data</span>(secret, key), dat)</a></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
@@ -637,7 +637,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb77-2" title="2">cyphr<span class="op">::</span><span class="kw">decrypt_file</span>(path_data_enc, key, path_data_decrypted)</a></code></pre></div>
 <p>Which is identical to the original:</p>
 <div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" title="1">tools<span class="op">::</span><span class="kw">md5sum</span>(<span class="kw">c</span>(path_data_csv, path_data_decrypted))</a></code></pre></div>
-<pre><code>##           /tmp/RtmpnVhGBY/iris.csv          /tmp/RtmpnVhGBY/idis2.csv 
+<pre><code>##           /tmp/RtmpI8wXy7/iris.csv          /tmp/RtmpI8wXy7/idis2.csv 
 ## &quot;5fe92fe6a2c1928ef5a67b8939fdaf8d&quot; &quot;5fe92fe6a2c1928ef5a67b8939fdaf8d&quot;</code></pre>
 </div>
 </div>

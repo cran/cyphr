@@ -10,7 +10,7 @@
 [![](https://badges.ropensci.org/114_status.svg)](https://github.com/ropensci/software-review/issues/114)
 <!-- badges: end -->
 
-High-level functions for supporting encryption and decryption of data from R.  This allows secure storage and exchange of information, while trying to keep the encryption/decryption code from taking over your analyses.  `cyphr` wraps the lower-level support from [`sodium`](https://github.com/jeroen/sodium) and [`openssl`](https://github.com/jeroen/openssl).  This package is designed to be easy to use, rather than the most secure thing (you're using R, remember - for examples of what `cyphr` can't protect against see [`jammr`](https://github.com/Ironholds/jammr), [`rpwnd`](https://github.com/hrbrmstr/rpwnd) and [`evil.R`](https://github.com/romainfrancois/evil.R).)
+High-level functions for supporting encryption and decryption of data from R.  This allows secure storage and exchange of information, while trying to keep the encryption/decryption code from taking over your analyses.  `cyphr` wraps the lower-level support from [`sodium`](https://github.com/r-lib/sodium) and [`openssl`](https://github.com/jeroen/openssl).  This package is designed to be easy to use, rather than the most secure thing (you're using R, remember - for examples of what `cyphr` can't protect against see [`jammr`](https://github.com/Ironholds/jammr), [`rpwnd`](https://github.com/hrbrmstr/rpwnd) and [`evil.R`](https://github.com/romainfrancois/evil.R).)
 
 `cyphr` provides high level functions to:
 
@@ -76,8 +76,8 @@ k
 ```
 
 ```
-##  [1] 76 ac 61 ee ad df de 45 1e 27 f5 fc 74 95 2f 9a f4 66 85 f9 95 05 80 5d d9
-## [26] 75 9f bf e2 c4 da 8f
+##  [1] 48 35 a2 6c 05 27 65 75 cb 08 01 de 76 8f 71 fe 3f d7 e4 7a df bf d8 e7 08
+## [26] d5 fb e9 61 c8 5f d1
 ```
 
 With this key we can create the `key_sodium` object:

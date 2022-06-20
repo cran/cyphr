@@ -12,7 +12,7 @@
 
 <meta name="author" content="Rich FitzJohn" />
 
-<meta name="date" content="2021-05-17" />
+<meta name="date" content="2022-06-20" />
 
 <title>Data Encryption</title>
 
@@ -318,7 +318,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Data Encryption</h1>
 <h4 class="author">Rich FitzJohn</h4>
-<h4 class="date">2021-05-17</h4>
+<h4 class="date">2022-06-20</h4>
 
 
 
@@ -345,15 +345,15 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_init</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
 <pre><code>## Generating data key</code></pre>
 <pre><code>## Authorising ourselves</code></pre>
-<pre><code>## Adding key 2e:b0:4e:7c:f9:70:fc:e2:78:d8:1d:26:11:ba:94:75:70:22:09:10:5b:99:e0:47:4f:3b:51:81:d1:e2:21:ff
-##   user: rfitzjoh
-##   host: wpia-dide300
-##   date: 2021-05-17 12:27:42</code></pre>
+<pre><code>## Adding key 91:e2:bf:0b:1d:d0:0b:c9:81:af:c7:9a:8a:60:c6:0d:ff:ac:17:b6:63:0c:bc:56:e8:cc:cf:c4:bd:cf:70:25
+##   user: rich
+##   host: wpia-dide136
+##   date: 2022-06-20 10:55:37</code></pre>
 <pre><code>## Verifying</code></pre>
 <p>The data key is very important. If it is deleted, then the data cannot be decrypted. So do not delete the directory <code>data_dir/.cyphr</code>! Ideally add it to your version control system so that it cannot be lost. Of course, if you’re working in a group, there are multiple copies of the data key (each encrypted with a different person’s personal key) which reduces the chance of total loss.</p>
 <p>This command can be run multiple times safely; if it detects it has been rerun and the data key will not be regenerated.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_init</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
-<pre><code>## Already set up at /tmp/RtmpnVhGBY/data</code></pre>
+<pre><code>## Already set up at /tmp/RtmpI8wXy7/data</code></pre>
 <pre><code>## Verifying</code></pre>
 <p><strong>Third</strong>, you can add encrypted data to the directory (or to anywhere really). When run, <code>cyphr::config_data</code> will verify that it can actually decrypt things.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">key &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_key</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
@@ -383,7 +383,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <pre><code>## A request has been added</code></pre>
 <pre><code>## Email someone with access to add you
 ## 
-##     hash: 91:05:9c:5f:8b:7f:c6:19:03:c8:ea:65:3b:c5:04:16:c2:ad:e3:41:9b:93:dc:78:a0:4d:a3:0c:bf:26:3d:54
+##     hash: 21:54:9b:4a:d9:d1:68:37:7c:cd:9e:31:80:be:78:fe:54:29:8c:07:7e:83:e2:1a:7b:6c:5a:d8:9a:11:80:98
 ## 
 ## If you are using git, you will need to commit and push first:
 ## 
@@ -396,23 +396,23 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">req &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_admin_list_requests</span>(data_dir)</a>
 <a class="sourceLine" id="cb23-2" title="2">req</a></code></pre></div>
 <pre><code>## 1 key:
-##   91:05:9c:5f:8b:7f:c6:19:03:c8:ea:65:3b:c5:04:16:c2:ad:e3:41:9b:93:dc:78:a0:4d:a3:0c:bf:26:3d:54
-##     user: rfitzjoh
-##     host: wpia-dide300
-##     date: 2021-05-17 12:27:42</code></pre>
-<p>We can see the same hash here as above (<code>91059c5f8b7fc61903c8ea653bc50416c2ade3419b93dc78a04da30cbf263d54</code>)</p>
+##   21:54:9b:4a:d9:d1:68:37:7c:cd:9e:31:80:be:78:fe:54:29:8c:07:7e:83:e2:1a:7b:6c:5a:d8:9a:11:80:98
+##     user: rich
+##     host: wpia-dide136
+##     date: 2022-06-20 10:55:37</code></pre>
+<p>We can see the same hash here as above (<code>21549b4ad9d168377ccd9e3180be78fe54298c077e83e21a7b6c5ad89a118098</code>)</p>
 <p>…and then grant access to them with the <code>cyphr::data_admin_authorise</code> function.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_authorise</span>(data_dir, <span class="dt">yes =</span> <span class="ot">TRUE</span>, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
 <pre><code>## There is 1 request for access</code></pre>
-<pre><code>## Adding key 91:05:9c:5f:8b:7f:c6:19:03:c8:ea:65:3b:c5:04:16:c2:ad:e3:41:9b:93:dc:78:a0:4d:a3:0c:bf:26:3d:54
-##   user: rfitzjoh
-##   host: wpia-dide300
-##   date: 2021-05-17 12:27:42</code></pre>
+<pre><code>## Adding key 21:54:9b:4a:d9:d1:68:37:7c:cd:9e:31:80:be:78:fe:54:29:8c:07:7e:83:e2:1a:7b:6c:5a:d8:9a:11:80:98
+##   user: rich
+##   host: wpia-dide136
+##   date: 2022-06-20 10:55:37</code></pre>
 <pre><code>## Added 1 key</code></pre>
 <pre><code>## If you are using git, you will need to commit and push:
 ## 
 ##     git add .cyphr
-##     git commit -m &quot;Authorised rfitzjoh&quot;
+##     git commit -m &quot;Authorised rich&quot;
 ##     git push</code></pre>
 <p>If you do not specify <code>yes = TRUE</code> will prompt for confirmation at each key added.</p>
 <p>This has cleared the request queue:</p>
@@ -421,14 +421,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>and added it to our set of keys:</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_list_keys</span>(data_dir)</a></code></pre></div>
 <pre><code>## 2 keys:
-##   2e:b0:4e:7c:f9:70:fc:e2:78:d8:1d:26:11:ba:94:75:70:22:09:10:5b:99:e0:47:4f:3b:51:81:d1:e2:21:ff
-##     user: rfitzjoh
-##     host: wpia-dide300
-##     date: 2021-05-17 12:27:42
-##   91:05:9c:5f:8b:7f:c6:19:03:c8:ea:65:3b:c5:04:16:c2:ad:e3:41:9b:93:dc:78:a0:4d:a3:0c:bf:26:3d:54
-##     user: rfitzjoh
-##     host: wpia-dide300
-##     date: 2021-05-17 12:27:42</code></pre>
+##   21:54:9b:4a:d9:d1:68:37:7c:cd:9e:31:80:be:78:fe:54:29:8c:07:7e:83:e2:1a:7b:6c:5a:d8:9a:11:80:98
+##     user: rich
+##     host: wpia-dide136
+##     date: 2022-06-20 10:55:37
+##   91:e2:bf:0b:1d:d0:0b:c9:81:af:c7:9a:8a:60:c6:0d:ff:ac:17:b6:63:0c:bc:56:e8:cc:cf:c4:bd:cf:70:25
+##     user: rich
+##     host: wpia-dide136
+##     date: 2022-06-20 10:55:37</code></pre>
 <p><strong>Finally</strong>, as soon as the authorisation has happened, the user can encrypt and decrypt files:</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">key_bob &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_key</span>(data_dir, <span class="dt">path_user =</span> path_key_bob)</a>
 <a class="sourceLine" id="cb34-2" title="2"><span class="kw">head</span>(cyphr<span class="op">::</span><span class="kw">decrypt</span>(<span class="kw">readRDS</span>(filename), key_bob))</a></code></pre></div>
@@ -446,10 +446,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_init</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
 <pre><code>## Generating data key</code></pre>
 <pre><code>## Authorising ourselves</code></pre>
-<pre><code>## Adding key 2e:b0:4e:7c:f9:70:fc:e2:78:d8:1d:26:11:ba:94:75:70:22:09:10:5b:99:e0:47:4f:3b:51:81:d1:e2:21:ff
-##   user: rfitzjoh
-##   host: wpia-dide300
-##   date: 2021-05-17 12:27:42</code></pre>
+<pre><code>## Adding key 91:e2:bf:0b:1d:d0:0b:c9:81:af:c7:9a:8a:60:c6:0d:ff:ac:17:b6:63:0c:bc:56:e8:cc:cf:c4:bd:cf:70:25
+##   user: rich
+##   host: wpia-dide136
+##   date: 2022-06-20 10:55:37</code></pre>
 <pre><code>## Verifying</code></pre>
 <p>Get the data key key:</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1">key &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_key</span>(data_dir, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
@@ -460,7 +460,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <pre><code>## A request has been added</code></pre>
 <pre><code>## Email someone with access to add you
 ## 
-##     hash: 91:05:9c:5f:8b:7f:c6:19:03:c8:ea:65:3b:c5:04:16:c2:ad:e3:41:9b:93:dc:78:a0:4d:a3:0c:bf:26:3d:54
+##     hash: 21:54:9b:4a:d9:d1:68:37:7c:cd:9e:31:80:be:78:fe:54:29:8c:07:7e:83:e2:1a:7b:6c:5a:d8:9a:11:80:98
 ## 
 ## If you are using git, you will need to commit and push first:
 ## 
@@ -470,15 +470,15 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Alice authorises this request::</p>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1">cyphr<span class="op">::</span><span class="kw">data_admin_authorise</span>(data_dir, <span class="dt">yes =</span> <span class="ot">TRUE</span>, <span class="dt">path_user =</span> path_key_alice)</a></code></pre></div>
 <pre><code>## There is 1 request for access</code></pre>
-<pre><code>## Adding key 91:05:9c:5f:8b:7f:c6:19:03:c8:ea:65:3b:c5:04:16:c2:ad:e3:41:9b:93:dc:78:a0:4d:a3:0c:bf:26:3d:54
-##   user: rfitzjoh
-##   host: wpia-dide300
-##   date: 2021-05-17 12:27:43</code></pre>
+<pre><code>## Adding key 21:54:9b:4a:d9:d1:68:37:7c:cd:9e:31:80:be:78:fe:54:29:8c:07:7e:83:e2:1a:7b:6c:5a:d8:9a:11:80:98
+##   user: rich
+##   host: wpia-dide136
+##   date: 2022-06-20 10:55:38</code></pre>
 <pre><code>## Added 1 key</code></pre>
 <pre><code>## If you are using git, you will need to commit and push:
 ## 
 ##     git add .cyphr
-##     git commit -m &quot;Authorised rfitzjoh&quot;
+##     git commit -m &quot;Authorised rich&quot;
 ##     git push</code></pre>
 <p>Bob can get the data key:</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">key &lt;-<span class="st"> </span>cyphr<span class="op">::</span><span class="kw">data_key</span>(data_dir, <span class="dt">path_user =</span> path_key_bob)</a></code></pre></div>
@@ -503,11 +503,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <pre><code>## [1] &quot;.cyphr&quot;   &quot;iris.rds&quot;</code></pre>
 <p>This does not actually need to be stored with the data but it makes sense to (there are workflows where data is stored remotely where storing this directory might make sense). The “keys” directory contains a number of files; one for each person who has access to the data.</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="kw">dir</span>(<span class="kw">file.path</span>(data_dir, <span class="st">&quot;.cyphr&quot;</span>, <span class="st">&quot;keys&quot;</span>))</a></code></pre></div>
-<pre><code>## [1] &quot;2eb04e7cf970fce278d81d2611ba9475702209105b99e0474f3b5181d1e221ff&quot;
-## [2] &quot;91059c5f8b7fc61903c8ea653bc50416c2ade3419b93dc78a04da30cbf263d54&quot;</code></pre>
+<pre><code>## [1] &quot;21549b4ad9d168377ccd9e3180be78fe54298c077e83e21a7b6c5ad89a118098&quot;
+## [2] &quot;91e2bf0b1dd00bc981afc79a8a60c60dffac17b6630cbc56e8cccfc4bdcf7025&quot;</code></pre>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1"><span class="kw">names</span>(cyphr<span class="op">::</span><span class="kw">data_admin_list_keys</span>(data_dir))</a></code></pre></div>
-<pre><code>## [1] &quot;2eb04e7cf970fce278d81d2611ba9475702209105b99e0474f3b5181d1e221ff&quot;
-## [2] &quot;91059c5f8b7fc61903c8ea653bc50416c2ade3419b93dc78a04da30cbf263d54&quot;</code></pre>
+<pre><code>## [1] &quot;21549b4ad9d168377ccd9e3180be78fe54298c077e83e21a7b6c5ad89a118098&quot;
+## [2] &quot;91e2bf0b1dd00bc981afc79a8a60c60dffac17b6630cbc56e8cccfc4bdcf7025&quot;</code></pre>
 <p>(the file <code>test</code> is a small file encrypted with the data key used to verify everything is working OK).</p>
 <p>Each file is stored in RDS format and is a list with elements:</p>
 <ul>
@@ -520,33 +520,33 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" title="1">h &lt;-<span class="st"> </span><span class="kw">names</span>(cyphr<span class="op">::</span><span class="kw">data_admin_list_keys</span>(data_dir))[[<span class="dv">1</span>]]</a>
 <a class="sourceLine" id="cb60-2" title="2"><span class="kw">readRDS</span>(<span class="kw">file.path</span>(data_dir, <span class="st">&quot;.cyphr&quot;</span>, <span class="st">&quot;keys&quot;</span>, h))</a></code></pre></div>
 <pre><code>## $user
-## [1] &quot;rfitzjoh&quot;
+## [1] &quot;rich&quot;
 ## 
 ## $host
-## [1] &quot;wpia-dide300&quot;
+## [1] &quot;wpia-dide136&quot;
 ## 
 ## $date
-## [1] &quot;2021-05-17 12:27:42 BST&quot;
+## [1] &quot;2022-06-20 10:55:38 BST&quot;
 ## 
 ## $pub
 ## [2048-bit rsa public key]
-## md5: b5b29266e1e46c837fa18732bf6f3102
+## md5: d85323cf26b481aff3975c96725807ad
 ## 
 ## $key
-##   [1] 66 7e c0 4d 8d 63 18 07 8c 5e a1 ef e0 18 fb 84 13 b3 fb 89 02 79 e5 05 aa
-##  [26] 1d 37 2e 62 28 86 6f 59 20 75 4f b7 d6 b3 c6 3c 49 ab 2e 5f f7 77 60 61 65
-##  [51] 16 55 e1 ea 2c e9 be 9a 93 c2 25 32 e3 e5 9a 74 dd 7e 4a 23 1f 9f 5a 67 66
-##  [76] 0c 6b 73 30 75 af d8 d3 26 b8 4a 18 39 ed e9 14 84 3b 5b e8 e1 86 75 c0 d7
-## [101] 10 1c 1d 8a d8 4c 8d 71 e1 d1 cf 94 34 a8 ee 93 57 4f 14 9b 41 12 b8 ee e6
-## [126] 4c b8 c5 94 9a 1d 90 24 d8 07 a2 43 62 05 4c 7d 79 81 15 98 a0 73 14 72 83
-## [151] 8e b9 ae 77 bc c0 1f 85 5a 93 99 0b a9 b0 8b 0b 9f d5 f7 da 3e 2b 06 df 1a
-## [176] 67 75 6b 74 5d 89 04 55 46 07 b4 05 a2 d4 ef 5c 3e 7b 21 37 1b 4d a2 62 fb
-## [201] 07 d7 06 65 d4 be 08 84 a2 74 26 fc 9f d9 4b 51 e0 67 c7 c3 62 90 1d 99 bb
-## [226] a7 e0 e7 ee 04 0b 84 4b 54 74 36 6b aa 93 f1 9b 51 20 79 3a ad 61 f9 6b 91
-## [251] 0f 22 a0 13 4d 55</code></pre>
+##   [1] ac 36 2f 00 66 02 3a 62 46 83 b4 e6 4f ae eb 79 86 48 81 10 fb c3 8a 03 e1
+##  [26] 12 c5 9e 9f 42 c0 4d 5b 69 f8 d2 bd 98 d8 7d 30 66 92 6a 60 0d 99 df e9 67
+##  [51] 0e d9 dd ee 55 94 b4 62 db d2 b1 47 58 2b e5 dd ae 5d 83 22 4c ca e4 2b 5f
+##  [76] c5 4c fd 46 c3 43 50 91 6b 92 bd 3c d2 11 e5 32 71 21 c9 24 24 64 82 6c cf
+## [101] a0 56 c4 42 c5 a1 9c 73 42 d4 6a a2 4d cb 9d 82 b4 05 5b 59 24 ea 16 28 c3
+## [126] 8a cc a1 16 4e 13 f3 9f fc ce 75 cb 13 8a 5f 8a 82 5c 03 84 33 db 46 e0 44
+## [151] 22 ec 85 32 3a 5e b8 b8 05 6c cf 4b 0c af e1 e1 78 90 4c 8b 2b b0 a6 f5 d5
+## [176] df 5f bc 61 48 3f a4 f7 03 f0 09 08 0d 0f cd 4c 1b 1e f4 b1 8f 3d 72 57 36
+## [201] db 09 11 e0 46 da 8f e5 90 a9 b9 23 9b 0c ff a4 9a d9 21 b5 1c 70 7f 77 f8
+## [226] 24 c8 54 4d b1 b3 7d 18 4e 28 ea 9c 1e 8b 4b a3 a7 bd 62 89 83 83 22 74 c7
+## [251] 6d dd 14 2d 2e ad</code></pre>
 <p>You can see that the hash of the public key is the same as name of the stored file here (which is used to prevent collisions when multiple people request access at the same time).</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1">h</a></code></pre></div>
-<pre><code>## [1] &quot;2eb04e7cf970fce278d81d2611ba9475702209105b99e0474f3b5181d1e221ff&quot;</code></pre>
+<pre><code>## [1] &quot;21549b4ad9d168377ccd9e3180be78fe54298c077e83e21a7b6c5ad89a118098&quot;</code></pre>
 <p>When a request is posted it is an RDS file with all of the above except for the <code>key</code> element, which is added during authorisation.</p>
 <p>(Note that the verification relies on the package code not being attacked, and given R’s highly dynamic nature an attacker could easily swap out the definition for the verification function with something that always returns <code>TRUE</code>.)</p>
 <p>When an authorised user creates the <code>data_key</code> object (which allows decryption of the data) <code>secret</code> will:</p>
