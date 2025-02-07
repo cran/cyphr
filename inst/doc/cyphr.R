@@ -40,7 +40,9 @@ secret <- cyphr::encrypt_string("secret message", pair_a)
 secret
 
 ## ----error = TRUE-------------------------------------------------------------
+try({
 cyphr::decrypt_string(secret, pair_a)
+})
 
 ## -----------------------------------------------------------------------------
 pair_b <- cyphr::keypair_openssl(path_key_alice, path_key_bob)
@@ -118,7 +120,9 @@ cyphr::encrypt_object(obj, key, path_secret)
 file.exists(path_secret)
 
 ## ----error = TRUE-------------------------------------------------------------
+try({
 readRDS(path_secret)
+})
 
 ## -----------------------------------------------------------------------------
 cyphr::decrypt_object(path_secret, key)
@@ -164,7 +168,9 @@ path_object <- file.path(tempdir(), "secret.rds")
 cyphr::encrypt(saveRDS(x, path_object), key)
 
 ## ----error = TRUE-------------------------------------------------------------
+try({
 readRDS(path_object)
+})
 
 ## -----------------------------------------------------------------------------
 cyphr::decrypt(readRDS(path_object), key)
@@ -186,7 +192,9 @@ cyphr::decrypt_string(secret, key)
 cyphr::session_key_refresh()
 
 ## ----error = TRUE-------------------------------------------------------------
+try({
 cyphr::decrypt_string(secret, key)
+})
 
 ## ----include = FALSE----------------------------------------------------------
 unlink(c(path_secret, path_object, path_data_csv, path_data_enc,

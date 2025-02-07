@@ -22,13 +22,17 @@ cyphr::encrypt(saveRDS(iris, filename), key)
 dir(data_dir)
 
 ## ----error = TRUE-------------------------------------------------------------
+try({
 readRDS(filename)
+})
 
 ## -----------------------------------------------------------------------------
 head(cyphr::decrypt(readRDS(filename), key))
 
 ## ----error = TRUE-------------------------------------------------------------
+try({
 key_bob <- cyphr::data_key(data_dir, path_user = path_key_bob)
+})
 
 ## -----------------------------------------------------------------------------
 cyphr::data_request_access(data_dir, path_user = path_key_bob)
